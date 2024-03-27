@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "args": [],
+            "cwd": "${workspaceFolder:HindleyMilnerW}",
+            "name": "Debug HindleyMilnerW",
+            "program": "${workspaceFolder:HindleyMilnerW}/.build/debug/HindleyMilnerW",
+            "preLaunchTask": "swift: Build Debug HindleyMilnerW"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "args": [],
+            "cwd": "${workspaceFolder:HindleyMilnerW}",
+            "name": "Release HindleyMilnerW",
+            "program": "${workspaceFolder:HindleyMilnerW}/.build/release/HindleyMilnerW",
+            "preLaunchTask": "swift: Build Release HindleyMilnerW"
+        }
+    ]
+}
