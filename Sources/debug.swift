@@ -19,6 +19,23 @@ extension TypeFunction: CustomDebugStringConvertible {
   }
 }
 
+extension TypeFunction: ExpressibleByStringLiteral {
+  init(stringLiteral value: String) {
+    switch value {
+    case "->":
+      self = .arrow
+    case "Bool":
+      self = .bool
+    case "Int":
+      self = .int
+    // case "List":
+    //   self = .list
+    default:
+      fatalError("Unknown type function \(value)")
+    }
+  }
+}
+
 
 
 extension MonoType: CustomDebugStringConvertible {
