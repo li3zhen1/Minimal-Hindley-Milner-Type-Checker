@@ -13,8 +13,8 @@ extension TypeFunction: CustomDebugStringConvertible {
       return "Bool"
     case .int:
       return "Int"
-    case .list:
-      return "List"
+    // case .list:
+    //   return "List"
     }
   }
 }

@@ -2,8 +2,8 @@ struct TypeVariable: Identifiable, Hashable, Equatable, MonoTypeProtocol {
   let id: Int
 
   init() {
-    self.id = TypeVariable.nextId
-    TypeVariable.nextId += 1
+    self.id = Self.nextId
+    Self.nextId += 1
   }
 
   static var nextId = 0
@@ -15,7 +15,7 @@ enum TypeFunction {
   case arrow
   case bool
   case int
-  case list
+  // case list
 }
 
 extension TypeFunction: ExpressibleByStringLiteral {
@@ -27,8 +27,8 @@ extension TypeFunction: ExpressibleByStringLiteral {
       self = .bool
     case "Int":
       self = .int
-    case "List":
-      self = .list
+    // case "List":
+    //   self = .list
     default:
       fatalError("Unknown type function \(value)")
     }
@@ -47,9 +47,13 @@ indirect enum MonoType: Equatable, MonoTypeProtocol {
 
   static func functionApplication(
     _ C: TypeFunction,
-    parameters: [MonoType]
+    parameters: [MonoType] = []
   ) -> Self {
     .functionApplication(TypeFunctionApplication(C, parameters: parameters))
+  }
+
+  static func variable() -> Self {
+    .variable(TypeVariable())
   }
 
   // static func functionApplication<each P>(_ C: TypeFunction, parameters: repeat each P) -> Self
@@ -106,9 +110,9 @@ indirect enum PolyType: Equatable {
 
   static func functionApplication(
     _ C: TypeFunction,
-    parameters: [MonoType]
+    parameters: [MonoType] = []
   ) -> PolyType {
-    .mono(.functionApplication(TypeFunctionApplication(C, parameters: parameters)))
+    .mono(.functionApplication(C, parameters: parameters))
   }
 }
 
@@ -118,7 +122,6 @@ struct TypeQuantifier: Equatable {
 }
 
 struct Context {
-  let contextID: Int
   var typeEnv: [String: PolyType]
 }
 
@@ -162,7 +165,7 @@ extension Substitution {
     for (key, value) in context.typeEnv {
       newTypeEnv[key] = apply(to: value)
     }
-    return Context(contextID: context.contextID, typeEnv: newTypeEnv)
+    return Context(typeEnv: newTypeEnv)
   }
 
   func combine(with other: Substitution) -> Substitution {
@@ -257,6 +260,7 @@ extension Context {
 enum TypeCheckError: Error {
   case typeMismatch
   case infiniteType
+  case unboundVariable
 }
 
 extension MonoType {
@@ -296,11 +300,10 @@ extension MonoType {
   }
 }
 
-let boolTy = MonoType.functionApplication(TypeFunctionApplication(.bool, parameters: []))
-let intTy = MonoType.functionApplication(TypeFunctionApplication(.int, parameters: []))
+let boolTy: MonoType = .functionApplication(.bool, parameters: [])
+let intTy: MonoType = .functionApplication(.int, parameters: [])
 
 var myContext = Context(
-  contextID: 0,
   typeEnv: [
     "not": .functionApplication(.arrow, parameters: [boolTy, boolTy]),
     "and": .functionApplication(
@@ -314,15 +317,15 @@ var myContext = Context(
 )
 
 protocol ExpressionProtocol {
-  func performTypeCheck(in context: Context) throws -> (MonoType, Substitution)
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution)
 }
 
 struct VariableExpression: ExpressionProtocol {
   let name: String
 
-  func performTypeCheck(in context: Context) throws -> (MonoType, Substitution) {
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
     guard let type = context.typeEnv[name] else {
-      fatalError("Unbound variable \(name)")
+      throw TypeCheckError.unboundVariable
     }
     return (type.instantiate(), .empty)
   }
@@ -332,17 +335,19 @@ struct ApplicationExpression: ExpressionProtocol {
   let function: ExpressionProtocol
   let argument: ExpressionProtocol
 
-  func performTypeCheck(in context: Context) throws -> (MonoType, Substitution) {
-    let (functionType, functionSubstitution) = try function.performTypeCheck(in: context)
-    let (argumentType, argumentSubstitution) = try argument.performTypeCheck(in: context)
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
+    let (functionType, functionSubstitution) = try function.typeCheck(in: context)
+    let (argumentType, argumentSubstitution) = try argument.typeCheck(in: context)
 
-    let resultType = MonoType.variable(TypeVariable())
+    let resultType = MonoType.variable()
     let substitution = try functionType.unify(
       with: .functionApplication(.arrow, parameters: [argumentType, resultType]))
 
     return (
-      resultType,
-      substitution.combine(with: functionSubstitution).combine(with: argumentSubstitution)
+      substitution.apply(to: resultType),
+      substitution
+        .combine(with: functionSubstitution)
+        .combine(with: argumentSubstitution)
     )
   }
 }
@@ -351,56 +356,26 @@ struct AbstractionExpression: ExpressionProtocol {
   let parameter: String
   let body: ExpressionProtocol
 
-  func performTypeCheck(in context: Context) throws -> (MonoType, Substitution) {
-    let newVariable = TypeVariable()
-    let monoVariable = MonoType.variable(newVariable)
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
+    let newVariable = MonoType.variable()
     let newContext = Context(
-      contextID: context.contextID + 1,
-      typeEnv: context.typeEnv.merging([parameter: .mono(monoVariable)]) { _, new in new }
+      // contextID: context.contextID + 1,
+      typeEnv: context.typeEnv.merging([parameter: .mono(newVariable)]) { _, new in new }
     )
 
-    let (bodyType, bodySubstitution) = try body.performTypeCheck(in: newContext)
+    let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
     return (
-      .functionApplication(.arrow, parameters: [monoVariable, bodyType]),
+      .functionApplication(.arrow, parameters: [newVariable, bodyType]),
       bodySubstitution
     )
   }
 }
 
-// struct LetExpression: ExpressionProtocol {
-//   let variable: String
-//   let value: ExpressionProtocol
-//   let body: ExpressionProtocol
-
-//   func performTypeCheck(in context: Context) throws -> (MonoType, Substitution) {
-//     let (valueType, valueSubstitution) = try value.performTypeCheck(in: context)
-//     let newContext = context.apply(to: valueSubstitution)
-//     let generalizedType = newContext.generalize(valueType)
-
-//     let newContextWithGeneralizedType = Context(
-//       contextID: newContext.contextID + 1,
-//       typeEnv: newContext.typeEnv.merging([variable: generalizedType]) { _, new in new }
-//     )
-
-//     let (bodyType, bodySubstitution) = try body.performTypeCheck(in: newContextWithGeneralizedType)
-//     return (bodyType, bodySubstitution.combine(with: valueSubstitution))
-//   }
-// }
-
 let oddOne = ApplicationExpression(
   function: VariableExpression(name: "odd"),
   argument: VariableExpression(name: "one")
 )
-
-// print(myContext.typeEnv["not"]!)
-
-// let (type, substitution) = try notExpression.performTypeCheck(in: myContext)
-// print(type)
-// print(substitution)
-// } catch {
-//   print(error)
-// }
 
 let notOddOne = ApplicationExpression(
   function: VariableExpression(name: "not"),
@@ -408,8 +383,8 @@ let notOddOne = ApplicationExpression(
 )
 
 do {
-  let (type, substitution) = try notOddOne.performTypeCheck(in: myContext)
-  print(type)
+  let (type, substitution) = try notOddOne.typeCheck(in: myContext)
+  print("type of `\(notOddOne)` is `\(type)`")
   print(substitution)
 } catch {
   print(error)
