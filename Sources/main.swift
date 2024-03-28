@@ -24,14 +24,6 @@ let notOddOne = ApplicationExpression(
   argument: oddOne
 )
 
-// do {
-//   let (type, substitution) = try notOddOne.typeCheck(in: myContext)
-//   print("type of `\(notOddOne)` is `\(type)`")
-//   print(substitution)
-// } catch {
-//   print(error)
-// }
-
 do {
   let source = "(func a => a)(1)"
   let chars = ANTLRInputStream(source)
@@ -41,6 +33,8 @@ do {
   let tree = try parser.program()
   let ast = TreeBuildVisitor().visit(tree) as! Program
 
+  print(ast)
+
   let (type, substitution) = try ast.typeCheck(in: myContext)
   print("type of `\(source)` is `\(type)`")
   print(substitution)
@@ -48,3 +42,22 @@ do {
 } catch {
   print(error)
 }
+
+// let x = TypeVariable()
+// let identityAbs: PolyType = .quantifier(variable: x, sigma: .functionApplication(.arrow, parameters: [.variable(x), .variable(x)]))
+// assert(identityAbs.freeVariables == [])
+
+// myContext.typeEnv["identity"] = identityAbs
+
+// let identity = ApplicationExpression(
+//   function: VariableExpression(name: "identity"),
+//   argument: VariableExpression(name: "one")
+// )
+
+// do {
+//   let (type, substitution) = try identity.typeCheck(in: myContext)
+//   print("type of `identity(one)` is `\(type)`")
+//   print(substitution)
+// } catch {
+//   print(error)
+// }

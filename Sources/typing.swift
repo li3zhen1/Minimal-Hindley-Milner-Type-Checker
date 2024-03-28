@@ -17,7 +17,6 @@ enum TypeFunction {
   // case list
 }
 
-
 protocol MonoTypeProtocol {
   var concreateType: MonoType { get }
 }
@@ -97,6 +96,13 @@ indirect enum PolyType: Equatable {
   ) -> PolyType {
     .mono(.functionApplication(C, parameters: parameters))
   }
+
+  static func quantifier(
+    variable: TypeVariable,
+    sigma: PolyType
+  ) -> PolyType {
+    .quantifier(TypeQuantifier(variable: variable, sigma: sigma))
+  }
 }
 
 struct TypeQuantifier: Equatable {
@@ -109,7 +115,7 @@ struct Context {
 }
 
 struct Substitution {
-  let raw: [TypeVariable: MonoType]
+  var raw: [TypeVariable: MonoType]
 }
 
 extension Substitution {
@@ -121,10 +127,8 @@ extension Substitution {
       return raw[variable] ?? type
     case .functionApplication(let application):
       return .functionApplication(
-        TypeFunctionApplication(
-          application.C,
-          parameters: application.parameters.map { apply(to: $0) }
-        )
+        application.C,
+        parameters: application.parameters.map { apply(to: $0) }
       )
     }
   }
@@ -135,10 +139,8 @@ extension Substitution {
       return .mono(apply(to: mono))
     case .quantifier(let quantifier):
       return .quantifier(
-        TypeQuantifier(
-          variable: quantifier.variable,
-          sigma: apply(to: quantifier.sigma)
-        )
+        variable: quantifier.variable,
+        sigma: apply(to: quantifier.sigma)
       )
     }
   }
@@ -151,12 +153,14 @@ extension Substitution {
     return Context(typeEnv: newTypeEnv)
   }
 
-  func combine(with other: Substitution) -> Substitution {
-    var newRaw = raw
-    for (key, value) in other.raw {
-      newRaw[key] = apply(to: value)
+  consuming func combine(with other: consuming Substitution) -> Substitution {
+    var result = copy self
+
+    for (k, v) in other.raw {
+      result.raw[k] = self.apply(to: v)
     }
-    return Substitution(raw: newRaw)
+
+    return result
   }
 }
 
@@ -173,12 +177,10 @@ extension MonoType: Instantiatable {
       return .variable(mappings[variable] ?? variable)
     case .functionApplication(let application):
       return .functionApplication(
-        TypeFunctionApplication(
-          application.C,
-          parameters: application.parameters.map {
-            $0.instantiate(with: mappings)
-          }
-        )
+        application.C,
+        parameters: application.parameters.map {
+          $0.instantiate(with: mappings)
+        }
       )
     }
   }
@@ -228,15 +230,21 @@ extension PolyType: Typable {
   }
 }
 
-extension Context {
+extension Context: Typable {
+
+  var freeVariables: Set<TypeVariable> {
+    typeEnv.values.reduce(into: Set<TypeVariable>()) { result, type in
+      result.formUnion(type.freeVariables)
+    }
+  }
+
   func generalize(_ type: MonoType) -> PolyType {
-    let freeVariables = type.freeVariables
-    let quantifiers = freeVariables.map { variable in
-      TypeQuantifier(variable: variable, sigma: .mono(.variable(variable)))
+    let quantifiers = type.freeVariables.subtracting(freeVariables)
+    var t: PolyType = .mono(type)
+    quantifiers.forEach { q in
+      t = .quantifier(variable: q, sigma: t)
     }
-    return quantifiers.reduce(.mono(type)) { result, quantifier in
-      .quantifier(quantifier)
-    }
+    return t
   }
 }
 
@@ -273,12 +281,11 @@ extension MonoType {
       guard lhs.parameters.count == rhs.parameters.count else {
         throw TypeCheckError.typeMismatch
       }
-      let substitutions = try zip(lhs.parameters, rhs.parameters).map { lhs, rhs in
-        try lhs.unify(with: rhs)
+      var s = Substitution.empty
+      for (l, r) in zip(lhs.parameters, rhs.parameters) {
+        s = s.combine(with: try s.apply(to: l).unify(with: s.apply(to: r)))
       }
-      return substitutions.reduce(.empty) { result, substitution in
-        result.combine(with: substitution)
-      }
+      return s
     }
   }
 }
