@@ -1,5 +1,9 @@
 import Antlr4
 
+
+let boolTy: MonoType = .functionApplication(.bool, parameters: [])
+let intTy: MonoType = .functionApplication(.int, parameters: [])
+
 var myContext = Context(
   typeEnv: [
     "not": .functionApplication(.arrow, parameters: [boolTy, boolTy]),
@@ -13,12 +17,12 @@ var myContext = Context(
   ]
 )
 
-let oddOne = ApplicationExpression(
-  function: VariableExpression(name: "odd"),
-  argument: VariableExpression(name: "one")
-)
+// let oddOne = ApplicationExpression(
+//   function: VariableExpression(name: "odd"),
+//   argument: VariableExpression(name: "one")
+// )
 
-let notOddOne = ApplicationExpression(
-  function: VariableExpression(name: "not"),
-  argument: oddOne
-)
+// let notOddOne = ApplicationExpression(
+//   function: VariableExpression(name: "not"),
+//   argument: oddOne
+// )

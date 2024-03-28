@@ -289,6 +289,3 @@ extension MonoType {
     }
   }
 }
-
-let boolTy: MonoType = .functionApplication(.bool, parameters: [])
-let intTy: MonoType = .functionApplication(.int, parameters: [])
