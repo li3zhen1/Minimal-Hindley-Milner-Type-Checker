@@ -19,15 +19,12 @@ bindingList  : binding (',' binding)* ;
 funcParam    : Identifier typeHint? ;
 funcParamList: funcParam* ;
 
-expr         : IntegerLiteral                                     # numberExpression
-             | StringLiteral                                      # stringExpression
-             | BooleanLiteral                                     # booleanExpression
+expr         : IntegerLiteral                                     # integerLiteral
+             | StringLiteral                                      # stringLiteral
+             | BooleanLiteral                                     # booleanLiteral
              | Identifier                                         # variableExpression
              | '(' expr ')'                                       # parenExpression
-             | expr '+' expr                                      # additionExpression
-             | expr '-' expr                                      # subtractionExpression
-             | expr '*' expr                                      # multiplicationExpression
-             | expr '/' expr                                      # divisionExpression
+             | expr BinaryOperator expr                           # binaryExpression
              | 'let' bindingList 'in' '{' expr '}'                # letExpression
              | 'func' funcParamList '=>' expr                     # funcDefExpression
              | expr '(' exprList ')'                              # funcAppExpression

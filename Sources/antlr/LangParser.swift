@@ -18,11 +18,10 @@ open class LangParser: Parser {
 	enum Tokens: Int {
 		case EOF = -1, T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, 
                  T__6 = 7, T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, 
-                 T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, T__16 = 17, 
-                 T__17 = 18, T__18 = 19, T__19 = 20, IntegerLiteral = 21, 
-                 RealLiteral = 22, StringLiteral = 23, BooleanLiteral = 24, 
-                 Identifier = 25, Alpha = 26, Digit = 27, Whitespace = 28, 
-                 Comment = 29
+                 T__12 = 13, T__13 = 14, T__14 = 15, T__15 = 16, IntegerLiteral = 17, 
+                 RealLiteral = 18, StringLiteral = 19, BooleanLiteral = 20, 
+                 BinaryOperator = 21, Identifier = 22, Alpha = 23, Digit = 24, 
+                 Whitespace = 25, Comment = 26
 	}
 
 	public
@@ -37,14 +36,13 @@ open class LangParser: Parser {
 	]
 
 	private static let _LITERAL_NAMES: [String?] = [
-		nil, "'type'", "'='", "'('", "','", "')'", "'|'", "':'", "'+'", "'-'", 
-		"'*'", "'/'", "'let'", "'in'", "'{'", "'}'", "'func'", "'=>'", "'if'", 
-		"'then'", "'else'"
+		nil, "'type'", "'='", "'('", "','", "')'", "'|'", "':'", "'let'", "'in'", 
+		"'{'", "'}'", "'func'", "'=>'", "'if'", "'then'", "'else'"
 	]
 	private static let _SYMBOLIC_NAMES: [String?] = [
 		nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, 
-		nil, nil, nil, nil, nil, nil, nil, "IntegerLiteral", "RealLiteral", "StringLiteral", 
-		"BooleanLiteral", "Identifier", "Alpha", "Digit", "Whitespace", "Comment"
+		nil, nil, nil, "IntegerLiteral", "RealLiteral", "StringLiteral", "BooleanLiteral", 
+		"BinaryOperator", "Identifier", "Alpha", "Digit", "Whitespace", "Comment"
 	]
 	public
 	static let VOCABULARY = Vocabulary(_LITERAL_NAMES, _SYMBOLIC_NAMES)
@@ -139,7 +137,7 @@ open class LangParser: Parser {
 		 	setState(24)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
-		 	while (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 61149194) != 0)) {
+		 	while (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 5918986) != 0)) {
 		 		setState(22)
 		 		try _errHandler.sync(self)
 		 		switch (LangParser.Tokens(rawValue: try _input.LA(1))!) {
@@ -149,9 +147,9 @@ open class LangParser: Parser {
 
 		 			break
 		 		case .T__2:fallthrough
+		 		case .T__7:fallthrough
 		 		case .T__11:fallthrough
-		 		case .T__15:fallthrough
-		 		case .T__17:fallthrough
+		 		case .T__13:fallthrough
 		 		case .IntegerLiteral:fallthrough
 		 		case .StringLiteral:fallthrough
 		 		case .BooleanLiteral:fallthrough
@@ -842,7 +840,7 @@ open class LangParser: Parser {
 			return LangParser.RULE_expr
 		}
 	}
-	public class AdditionExpressionContext: ExprContext {
+	public class BinaryExpressionContext: ExprContext {
 			open
 			func expr() -> [ExprContext] {
 				return getRuleContexts(ExprContext.self)
@@ -851,6 +849,10 @@ open class LangParser: Parser {
 			func expr(_ i: Int) -> ExprContext? {
 				return getRuleContext(ExprContext.self, i)
 			}
+			open
+			func BinaryOperator() -> TerminalNode? {
+				return getToken(LangParser.Tokens.BinaryOperator.rawValue, 0)
+			}
 
 		public
 		init(_ ctx: ExprContext) {
@@ -860,32 +862,32 @@ open class LangParser: Parser {
 		override open
 		func enterRule(_ listener: ParseTreeListener) {
 			if let listener = listener as? LangListener {
-				listener.enterAdditionExpression(self)
+				listener.enterBinaryExpression(self)
 			}
 		}
 		override open
 		func exitRule(_ listener: ParseTreeListener) {
 			if let listener = listener as? LangListener {
-				listener.exitAdditionExpression(self)
+				listener.exitBinaryExpression(self)
 			}
 		}
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitAdditionExpression(self)
+			    return visitor.visitBinaryExpression(self)
 			}
 			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitAdditionExpression(self)
+			    return visitor.visitBinaryExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
 			}
 		}
 	}
-	public class NumberExpressionContext: ExprContext {
+	public class StringLiteralContext: ExprContext {
 			open
-			func IntegerLiteral() -> TerminalNode? {
-				return getToken(LangParser.Tokens.IntegerLiteral.rawValue, 0)
+			func StringLiteral() -> TerminalNode? {
+				return getToken(LangParser.Tokens.StringLiteral.rawValue, 0)
 			}
 
 		public
@@ -896,22 +898,22 @@ open class LangParser: Parser {
 		override open
 		func enterRule(_ listener: ParseTreeListener) {
 			if let listener = listener as? LangListener {
-				listener.enterNumberExpression(self)
+				listener.enterStringLiteral(self)
 			}
 		}
 		override open
 		func exitRule(_ listener: ParseTreeListener) {
 			if let listener = listener as? LangListener {
-				listener.exitNumberExpression(self)
+				listener.exitStringLiteral(self)
 			}
 		}
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitNumberExpression(self)
+			    return visitor.visitStringLiteral(self)
 			}
 			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitNumberExpression(self)
+			    return visitor.visitStringLiteral(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
@@ -958,6 +960,82 @@ open class LangParser: Parser {
 			}
 		}
 	}
+	public class LetExpressionContext: ExprContext {
+			open
+			func bindingList() -> BindingListContext? {
+				return getRuleContext(BindingListContext.self, 0)
+			}
+			open
+			func expr() -> ExprContext? {
+				return getRuleContext(ExprContext.self, 0)
+			}
+
+		public
+		init(_ ctx: ExprContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func enterRule(_ listener: ParseTreeListener) {
+			if let listener = listener as? LangListener {
+				listener.enterLetExpression(self)
+			}
+		}
+		override open
+		func exitRule(_ listener: ParseTreeListener) {
+			if let listener = listener as? LangListener {
+				listener.exitLetExpression(self)
+			}
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? LangVisitor {
+			    return visitor.visitLetExpression(self)
+			}
+			else if let visitor = visitor as? LangBaseVisitor {
+			    return visitor.visitLetExpression(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
+	public class IntegerLiteralContext: ExprContext {
+			open
+			func IntegerLiteral() -> TerminalNode? {
+				return getToken(LangParser.Tokens.IntegerLiteral.rawValue, 0)
+			}
+
+		public
+		init(_ ctx: ExprContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+		override open
+		func enterRule(_ listener: ParseTreeListener) {
+			if let listener = listener as? LangListener {
+				listener.enterIntegerLiteral(self)
+			}
+		}
+		override open
+		func exitRule(_ listener: ParseTreeListener) {
+			if let listener = listener as? LangListener {
+				listener.exitIntegerLiteral(self)
+			}
+		}
+		override open
+		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
+			if let visitor = visitor as? LangVisitor {
+			    return visitor.visitIntegerLiteral(self)
+			}
+			else if let visitor = visitor as? LangBaseVisitor {
+			    return visitor.visitIntegerLiteral(self)
+			}
+			else {
+			     return visitor.visitChildren(self)
+			}
+		}
+	}
 	public class AssignmentExpressionContext: ExprContext {
 			open
 			func Identifier() -> TerminalNode? {
@@ -996,46 +1074,6 @@ open class LangParser: Parser {
 			}
 			else if let visitor = visitor as? LangBaseVisitor {
 			    return visitor.visitAssignmentExpression(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class MultiplicationExpressionContext: ExprContext {
-			open
-			func expr() -> [ExprContext] {
-				return getRuleContexts(ExprContext.self)
-			}
-			open
-			func expr(_ i: Int) -> ExprContext? {
-				return getRuleContext(ExprContext.self, i)
-			}
-
-		public
-		init(_ ctx: ExprContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func enterRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.enterMultiplicationExpression(self)
-			}
-		}
-		override open
-		func exitRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.exitMultiplicationExpression(self)
-			}
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitMultiplicationExpression(self)
-			}
-			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitMultiplicationExpression(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
@@ -1118,7 +1156,7 @@ open class LangParser: Parser {
 			}
 		}
 	}
-	public class BooleanExpressionContext: ExprContext {
+	public class BooleanLiteralContext: ExprContext {
 			open
 			func BooleanLiteral() -> TerminalNode? {
 				return getToken(LangParser.Tokens.BooleanLiteral.rawValue, 0)
@@ -1132,22 +1170,22 @@ open class LangParser: Parser {
 		override open
 		func enterRule(_ listener: ParseTreeListener) {
 			if let listener = listener as? LangListener {
-				listener.enterBooleanExpression(self)
+				listener.enterBooleanLiteral(self)
 			}
 		}
 		override open
 		func exitRule(_ listener: ParseTreeListener) {
 			if let listener = listener as? LangListener {
-				listener.exitBooleanExpression(self)
+				listener.exitBooleanLiteral(self)
 			}
 		}
 		override open
 		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
 			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitBooleanExpression(self)
+			    return visitor.visitBooleanLiteral(self)
 			}
 			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitBooleanExpression(self)
+			    return visitor.visitBooleanLiteral(self)
 			}
 			else {
 			     return visitor.visitChildren(self)
@@ -1230,162 +1268,6 @@ open class LangParser: Parser {
 			}
 		}
 	}
-	public class StringExpressionContext: ExprContext {
-			open
-			func StringLiteral() -> TerminalNode? {
-				return getToken(LangParser.Tokens.StringLiteral.rawValue, 0)
-			}
-
-		public
-		init(_ ctx: ExprContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func enterRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.enterStringExpression(self)
-			}
-		}
-		override open
-		func exitRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.exitStringExpression(self)
-			}
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitStringExpression(self)
-			}
-			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitStringExpression(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class SubtractionExpressionContext: ExprContext {
-			open
-			func expr() -> [ExprContext] {
-				return getRuleContexts(ExprContext.self)
-			}
-			open
-			func expr(_ i: Int) -> ExprContext? {
-				return getRuleContext(ExprContext.self, i)
-			}
-
-		public
-		init(_ ctx: ExprContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func enterRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.enterSubtractionExpression(self)
-			}
-		}
-		override open
-		func exitRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.exitSubtractionExpression(self)
-			}
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitSubtractionExpression(self)
-			}
-			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitSubtractionExpression(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class LetExpressionContext: ExprContext {
-			open
-			func bindingList() -> BindingListContext? {
-				return getRuleContext(BindingListContext.self, 0)
-			}
-			open
-			func expr() -> ExprContext? {
-				return getRuleContext(ExprContext.self, 0)
-			}
-
-		public
-		init(_ ctx: ExprContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func enterRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.enterLetExpression(self)
-			}
-		}
-		override open
-		func exitRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.exitLetExpression(self)
-			}
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitLetExpression(self)
-			}
-			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitLetExpression(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
-	public class DivisionExpressionContext: ExprContext {
-			open
-			func expr() -> [ExprContext] {
-				return getRuleContexts(ExprContext.self)
-			}
-			open
-			func expr(_ i: Int) -> ExprContext? {
-				return getRuleContext(ExprContext.self, i)
-			}
-
-		public
-		init(_ ctx: ExprContext) {
-			super.init()
-			copyFrom(ctx)
-		}
-		override open
-		func enterRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.enterDivisionExpression(self)
-			}
-		}
-		override open
-		func exitRule(_ listener: ParseTreeListener) {
-			if let listener = listener as? LangListener {
-				listener.exitDivisionExpression(self)
-			}
-		}
-		override open
-		func accept<T>(_ visitor: ParseTreeVisitor<T>) -> T? {
-			if let visitor = visitor as? LangVisitor {
-			    return visitor.visitDivisionExpression(self)
-			}
-			else if let visitor = visitor as? LangBaseVisitor {
-			    return visitor.visitDivisionExpression(self)
-			}
-			else {
-			     return visitor.visitChildren(self)
-			}
-		}
-	}
 
 	 public final  func expr( ) throws -> ExprContext   {
 		return try expr(0)
@@ -1410,7 +1292,7 @@ open class LangParser: Parser {
 			try _errHandler.sync(self)
 			switch(try getInterpreter().adaptivePredict(_input,11, _ctx)) {
 			case 1:
-				_localctx = NumberExpressionContext(_localctx)
+				_localctx = IntegerLiteralContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 
@@ -1419,7 +1301,7 @@ open class LangParser: Parser {
 
 				break
 			case 2:
-				_localctx = StringExpressionContext(_localctx)
+				_localctx = StringLiteralContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(88)
@@ -1427,7 +1309,7 @@ open class LangParser: Parser {
 
 				break
 			case 3:
-				_localctx = BooleanExpressionContext(_localctx)
+				_localctx = BooleanLiteralContext(_localctx)
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(89)
@@ -1459,17 +1341,17 @@ open class LangParser: Parser {
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(95)
-				try match(LangParser.Tokens.T__11.rawValue)
+				try match(LangParser.Tokens.T__7.rawValue)
 				setState(96)
 				try bindingList()
 				setState(97)
-				try match(LangParser.Tokens.T__12.rawValue)
+				try match(LangParser.Tokens.T__8.rawValue)
 				setState(98)
-				try match(LangParser.Tokens.T__13.rawValue)
+				try match(LangParser.Tokens.T__9.rawValue)
 				setState(99)
 				try expr(0)
 				setState(100)
-				try match(LangParser.Tokens.T__14.rawValue)
+				try match(LangParser.Tokens.T__10.rawValue)
 
 				break
 			case 7:
@@ -1477,11 +1359,11 @@ open class LangParser: Parser {
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(102)
-				try match(LangParser.Tokens.T__15.rawValue)
+				try match(LangParser.Tokens.T__11.rawValue)
 				setState(103)
 				try funcParamList()
 				setState(104)
-				try match(LangParser.Tokens.T__16.rawValue)
+				try match(LangParser.Tokens.T__12.rawValue)
 				setState(105)
 				try expr(4)
 
@@ -1491,15 +1373,15 @@ open class LangParser: Parser {
 				_ctx = _localctx
 				_prevctx = _localctx
 				setState(107)
-				try match(LangParser.Tokens.T__17.rawValue)
+				try match(LangParser.Tokens.T__13.rawValue)
 				setState(108)
 				try expr(0)
 				setState(109)
-				try match(LangParser.Tokens.T__18.rawValue)
+				try match(LangParser.Tokens.T__14.rawValue)
 				setState(110)
 				try expr(0)
 				setState(111)
-				try match(LangParser.Tokens.T__19.rawValue)
+				try match(LangParser.Tokens.T__15.rawValue)
 				setState(112)
 				try expr(2)
 
@@ -1528,7 +1410,7 @@ open class LangParser: Parser {
 			default: break
 			}
 			_ctx!.stop = try _input.LT(-1)
-			setState(141)
+			setState(132)
 			try _errHandler.sync(self)
 			_alt = try getInterpreter().adaptivePredict(_input,13,_ctx)
 			while (_alt != 2 && _alt != ATN.INVALID_ALT_NUMBER) {
@@ -1537,73 +1419,34 @@ open class LangParser: Parser {
 					   try triggerExitRuleEvent()
 					}
 					_prevctx = _localctx
-					setState(139)
+					setState(130)
 					try _errHandler.sync(self)
 					switch(try getInterpreter().adaptivePredict(_input,12, _ctx)) {
 					case 1:
-						_localctx = AdditionExpressionContext(  ExprContext(_parentctx, _parentState))
+						_localctx = BinaryExpressionContext(  ExprContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, LangParser.RULE_expr)
 						setState(122)
-						if (!(precpred(_ctx, 9))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 9)"))
-						}
-						setState(123)
-						try match(LangParser.Tokens.T__7.rawValue)
-						setState(124)
-						try expr(10)
-
-						break
-					case 2:
-						_localctx = SubtractionExpressionContext(  ExprContext(_parentctx, _parentState))
-						try pushNewRecursionContext(_localctx, _startState, LangParser.RULE_expr)
-						setState(125)
-						if (!(precpred(_ctx, 8))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 8)"))
-						}
-						setState(126)
-						try match(LangParser.Tokens.T__8.rawValue)
-						setState(127)
-						try expr(9)
-
-						break
-					case 3:
-						_localctx = MultiplicationExpressionContext(  ExprContext(_parentctx, _parentState))
-						try pushNewRecursionContext(_localctx, _startState, LangParser.RULE_expr)
-						setState(128)
-						if (!(precpred(_ctx, 7))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 7)"))
-						}
-						setState(129)
-						try match(LangParser.Tokens.T__9.rawValue)
-						setState(130)
-						try expr(8)
-
-						break
-					case 4:
-						_localctx = DivisionExpressionContext(  ExprContext(_parentctx, _parentState))
-						try pushNewRecursionContext(_localctx, _startState, LangParser.RULE_expr)
-						setState(131)
 						if (!(precpred(_ctx, 6))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 6)"))
 						}
-						setState(132)
-						try match(LangParser.Tokens.T__10.rawValue)
-						setState(133)
+						setState(123)
+						try match(LangParser.Tokens.BinaryOperator.rawValue)
+						setState(124)
 						try expr(7)
 
 						break
-					case 5:
+					case 2:
 						_localctx = FuncAppExpressionContext(  ExprContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, LangParser.RULE_expr)
-						setState(134)
+						setState(125)
 						if (!(precpred(_ctx, 3))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 3)"))
 						}
-						setState(135)
+						setState(126)
 						try match(LangParser.Tokens.T__2.rawValue)
-						setState(136)
+						setState(127)
 						try exprList()
-						setState(137)
+						setState(128)
 						try match(LangParser.Tokens.T__4.rawValue)
 
 						break
@@ -1611,7 +1454,7 @@ open class LangParser: Parser {
 					}
 			 
 				}
-				setState(143)
+				setState(134)
 				try _errHandler.sync(self)
 				_alt = try getInterpreter().adaptivePredict(_input,13,_ctx)
 			}
@@ -1675,23 +1518,23 @@ open class LangParser: Parser {
 	    }
 		do {
 		 	try enterOuterAlt(_localctx, 1)
-		 	setState(152)
+		 	setState(143)
 		 	try _errHandler.sync(self)
 		 	_la = try _input.LA(1)
-		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 61149192) != 0)) {
-		 		setState(144)
+		 	if (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 5918984) != 0)) {
+		 		setState(135)
 		 		try expr(0)
-		 		setState(149)
+		 		setState(140)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 		while (_la == LangParser.Tokens.T__3.rawValue) {
-		 			setState(145)
+		 			setState(136)
 		 			try match(LangParser.Tokens.T__3.rawValue)
-		 			setState(146)
+		 			setState(137)
 		 			try expr(0)
 
 
-		 			setState(151)
+		 			setState(142)
 		 			try _errHandler.sync(self)
 		 			_la = try _input.LA(1)
 		 		}
@@ -1727,17 +1570,14 @@ open class LangParser: Parser {
 	}
 	private func expr_sempred(_ _localctx: ExprContext!,  _ predIndex: Int) throws -> Bool {
 		switch (predIndex) {
-		    case 1:return precpred(_ctx, 9)
-		    case 2:return precpred(_ctx, 8)
-		    case 3:return precpred(_ctx, 7)
-		    case 4:return precpred(_ctx, 6)
-		    case 5:return precpred(_ctx, 3)
+		    case 1:return precpred(_ctx, 6)
+		    case 2:return precpred(_ctx, 3)
 		    default: return true
 		}
 	}
 
 	static let _serializedATN:[Int] = [
-		4,1,29,155,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
+		4,1,26,146,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,
 		7,7,2,8,7,8,2,9,7,9,1,0,1,0,5,0,23,8,0,10,0,12,0,26,9,0,1,0,1,0,1,1,1,
 		1,1,1,1,1,1,1,1,2,1,2,1,2,1,2,1,2,1,2,5,2,41,8,2,10,2,12,2,44,9,2,3,2,
 		46,8,2,1,2,3,2,49,8,2,1,2,1,2,1,2,5,2,54,8,2,10,2,12,2,57,9,2,1,3,1,3,
@@ -1745,46 +1585,43 @@ open class LangParser: Parser {
 		9,5,1,6,1,6,3,6,79,8,6,1,7,5,7,82,8,7,10,7,12,7,85,9,7,1,8,1,8,1,8,1,8,
 		1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,
 		8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,3,8,117,8,8,1,8,1,8,3,8,121,8,8,1,8,
-		1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,1,8,5,8,140,
-		8,8,10,8,12,8,143,9,8,1,9,1,9,1,9,5,9,148,8,9,10,9,12,9,151,9,9,3,9,153,
-		8,9,1,9,0,2,4,16,10,0,2,4,6,8,10,12,14,16,18,0,0,170,0,24,1,0,0,0,2,29,
-		1,0,0,0,4,48,1,0,0,0,6,58,1,0,0,0,8,61,1,0,0,0,10,68,1,0,0,0,12,76,1,0,
-		0,0,14,83,1,0,0,0,16,120,1,0,0,0,18,152,1,0,0,0,20,23,3,2,1,0,21,23,3,
-		16,8,0,22,20,1,0,0,0,22,21,1,0,0,0,23,26,1,0,0,0,24,22,1,0,0,0,24,25,1,
-		0,0,0,25,27,1,0,0,0,26,24,1,0,0,0,27,28,5,0,0,1,28,1,1,0,0,0,29,30,5,1,
-		0,0,30,31,5,25,0,0,31,32,5,2,0,0,32,33,3,4,2,0,33,3,1,0,0,0,34,35,6,2,
-		-1,0,35,49,5,25,0,0,36,45,5,3,0,0,37,42,3,4,2,0,38,39,5,4,0,0,39,41,3,
-		4,2,0,40,38,1,0,0,0,41,44,1,0,0,0,42,40,1,0,0,0,42,43,1,0,0,0,43,46,1,
-		0,0,0,44,42,1,0,0,0,45,37,1,0,0,0,45,46,1,0,0,0,46,47,1,0,0,0,47,49,5,
-		5,0,0,48,34,1,0,0,0,48,36,1,0,0,0,49,55,1,0,0,0,50,51,10,1,0,0,51,52,5,
-		6,0,0,52,54,3,4,2,2,53,50,1,0,0,0,54,57,1,0,0,0,55,53,1,0,0,0,55,56,1,
-		0,0,0,56,5,1,0,0,0,57,55,1,0,0,0,58,59,5,7,0,0,59,60,3,4,2,0,60,7,1,0,
-		0,0,61,63,5,25,0,0,62,64,3,6,3,0,63,62,1,0,0,0,63,64,1,0,0,0,64,65,1,0,
-		0,0,65,66,5,2,0,0,66,67,3,16,8,0,67,9,1,0,0,0,68,73,3,8,4,0,69,70,5,4,
-		0,0,70,72,3,8,4,0,71,69,1,0,0,0,72,75,1,0,0,0,73,71,1,0,0,0,73,74,1,0,
-		0,0,74,11,1,0,0,0,75,73,1,0,0,0,76,78,5,25,0,0,77,79,3,6,3,0,78,77,1,0,
-		0,0,78,79,1,0,0,0,79,13,1,0,0,0,80,82,3,12,6,0,81,80,1,0,0,0,82,85,1,0,
-		0,0,83,81,1,0,0,0,83,84,1,0,0,0,84,15,1,0,0,0,85,83,1,0,0,0,86,87,6,8,
-		-1,0,87,121,5,21,0,0,88,121,5,23,0,0,89,121,5,24,0,0,90,121,5,25,0,0,91,
-		92,5,3,0,0,92,93,3,16,8,0,93,94,5,5,0,0,94,121,1,0,0,0,95,96,5,12,0,0,
-		96,97,3,10,5,0,97,98,5,13,0,0,98,99,5,14,0,0,99,100,3,16,8,0,100,101,5,
-		15,0,0,101,121,1,0,0,0,102,103,5,16,0,0,103,104,3,14,7,0,104,105,5,17,
-		0,0,105,106,3,16,8,4,106,121,1,0,0,0,107,108,5,18,0,0,108,109,3,16,8,0,
-		109,110,5,19,0,0,110,111,3,16,8,0,111,112,5,20,0,0,112,113,3,16,8,2,113,
-		121,1,0,0,0,114,116,5,25,0,0,115,117,3,6,3,0,116,115,1,0,0,0,116,117,1,
-		0,0,0,117,118,1,0,0,0,118,119,5,2,0,0,119,121,3,16,8,1,120,86,1,0,0,0,
-		120,88,1,0,0,0,120,89,1,0,0,0,120,90,1,0,0,0,120,91,1,0,0,0,120,95,1,0,
-		0,0,120,102,1,0,0,0,120,107,1,0,0,0,120,114,1,0,0,0,121,141,1,0,0,0,122,
-		123,10,9,0,0,123,124,5,8,0,0,124,140,3,16,8,10,125,126,10,8,0,0,126,127,
-		5,9,0,0,127,140,3,16,8,9,128,129,10,7,0,0,129,130,5,10,0,0,130,140,3,16,
-		8,8,131,132,10,6,0,0,132,133,5,11,0,0,133,140,3,16,8,7,134,135,10,3,0,
-		0,135,136,5,3,0,0,136,137,3,18,9,0,137,138,5,5,0,0,138,140,1,0,0,0,139,
-		122,1,0,0,0,139,125,1,0,0,0,139,128,1,0,0,0,139,131,1,0,0,0,139,134,1,
-		0,0,0,140,143,1,0,0,0,141,139,1,0,0,0,141,142,1,0,0,0,142,17,1,0,0,0,143,
-		141,1,0,0,0,144,149,3,16,8,0,145,146,5,4,0,0,146,148,3,16,8,0,147,145,
-		1,0,0,0,148,151,1,0,0,0,149,147,1,0,0,0,149,150,1,0,0,0,150,153,1,0,0,
-		0,151,149,1,0,0,0,152,144,1,0,0,0,152,153,1,0,0,0,153,19,1,0,0,0,16,22,
-		24,42,45,48,55,63,73,78,83,116,120,139,141,149,152
+		1,8,1,8,1,8,1,8,1,8,1,8,1,8,5,8,131,8,8,10,8,12,8,134,9,8,1,9,1,9,1,9,
+		5,9,139,8,9,10,9,12,9,142,9,9,3,9,144,8,9,1,9,0,2,4,16,10,0,2,4,6,8,10,
+		12,14,16,18,0,0,158,0,24,1,0,0,0,2,29,1,0,0,0,4,48,1,0,0,0,6,58,1,0,0,
+		0,8,61,1,0,0,0,10,68,1,0,0,0,12,76,1,0,0,0,14,83,1,0,0,0,16,120,1,0,0,
+		0,18,143,1,0,0,0,20,23,3,2,1,0,21,23,3,16,8,0,22,20,1,0,0,0,22,21,1,0,
+		0,0,23,26,1,0,0,0,24,22,1,0,0,0,24,25,1,0,0,0,25,27,1,0,0,0,26,24,1,0,
+		0,0,27,28,5,0,0,1,28,1,1,0,0,0,29,30,5,1,0,0,30,31,5,22,0,0,31,32,5,2,
+		0,0,32,33,3,4,2,0,33,3,1,0,0,0,34,35,6,2,-1,0,35,49,5,22,0,0,36,45,5,3,
+		0,0,37,42,3,4,2,0,38,39,5,4,0,0,39,41,3,4,2,0,40,38,1,0,0,0,41,44,1,0,
+		0,0,42,40,1,0,0,0,42,43,1,0,0,0,43,46,1,0,0,0,44,42,1,0,0,0,45,37,1,0,
+		0,0,45,46,1,0,0,0,46,47,1,0,0,0,47,49,5,5,0,0,48,34,1,0,0,0,48,36,1,0,
+		0,0,49,55,1,0,0,0,50,51,10,1,0,0,51,52,5,6,0,0,52,54,3,4,2,2,53,50,1,0,
+		0,0,54,57,1,0,0,0,55,53,1,0,0,0,55,56,1,0,0,0,56,5,1,0,0,0,57,55,1,0,0,
+		0,58,59,5,7,0,0,59,60,3,4,2,0,60,7,1,0,0,0,61,63,5,22,0,0,62,64,3,6,3,
+		0,63,62,1,0,0,0,63,64,1,0,0,0,64,65,1,0,0,0,65,66,5,2,0,0,66,67,3,16,8,
+		0,67,9,1,0,0,0,68,73,3,8,4,0,69,70,5,4,0,0,70,72,3,8,4,0,71,69,1,0,0,0,
+		72,75,1,0,0,0,73,71,1,0,0,0,73,74,1,0,0,0,74,11,1,0,0,0,75,73,1,0,0,0,
+		76,78,5,22,0,0,77,79,3,6,3,0,78,77,1,0,0,0,78,79,1,0,0,0,79,13,1,0,0,0,
+		80,82,3,12,6,0,81,80,1,0,0,0,82,85,1,0,0,0,83,81,1,0,0,0,83,84,1,0,0,0,
+		84,15,1,0,0,0,85,83,1,0,0,0,86,87,6,8,-1,0,87,121,5,17,0,0,88,121,5,19,
+		0,0,89,121,5,20,0,0,90,121,5,22,0,0,91,92,5,3,0,0,92,93,3,16,8,0,93,94,
+		5,5,0,0,94,121,1,0,0,0,95,96,5,8,0,0,96,97,3,10,5,0,97,98,5,9,0,0,98,99,
+		5,10,0,0,99,100,3,16,8,0,100,101,5,11,0,0,101,121,1,0,0,0,102,103,5,12,
+		0,0,103,104,3,14,7,0,104,105,5,13,0,0,105,106,3,16,8,4,106,121,1,0,0,0,
+		107,108,5,14,0,0,108,109,3,16,8,0,109,110,5,15,0,0,110,111,3,16,8,0,111,
+		112,5,16,0,0,112,113,3,16,8,2,113,121,1,0,0,0,114,116,5,22,0,0,115,117,
+		3,6,3,0,116,115,1,0,0,0,116,117,1,0,0,0,117,118,1,0,0,0,118,119,5,2,0,
+		0,119,121,3,16,8,1,120,86,1,0,0,0,120,88,1,0,0,0,120,89,1,0,0,0,120,90,
+		1,0,0,0,120,91,1,0,0,0,120,95,1,0,0,0,120,102,1,0,0,0,120,107,1,0,0,0,
+		120,114,1,0,0,0,121,132,1,0,0,0,122,123,10,6,0,0,123,124,5,21,0,0,124,
+		131,3,16,8,7,125,126,10,3,0,0,126,127,5,3,0,0,127,128,3,18,9,0,128,129,
+		5,5,0,0,129,131,1,0,0,0,130,122,1,0,0,0,130,125,1,0,0,0,131,134,1,0,0,
+		0,132,130,1,0,0,0,132,133,1,0,0,0,133,17,1,0,0,0,134,132,1,0,0,0,135,140,
+		3,16,8,0,136,137,5,4,0,0,137,139,3,16,8,0,138,136,1,0,0,0,139,142,1,0,
+		0,0,140,138,1,0,0,0,140,141,1,0,0,0,141,144,1,0,0,0,142,140,1,0,0,0,143,
+		135,1,0,0,0,143,144,1,0,0,0,144,19,1,0,0,0,16,22,24,42,45,48,55,63,73,
+		78,83,116,120,130,132,140,143
 	]
 
 	public

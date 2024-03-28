@@ -86,14 +86,14 @@ open class LangBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitAdditionExpression(_ ctx: LangParser.AdditionExpressionContext) -> T? { return visitChildren(ctx) }
+	open func visitBinaryExpression(_ ctx: LangParser.BinaryExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitNumberExpression(_ ctx: LangParser.NumberExpressionContext) -> T? { return visitChildren(ctx) }
+	open func visitStringLiteral(_ ctx: LangParser.StringLiteralContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -107,14 +107,21 @@ open class LangBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitAssignmentExpression(_ ctx: LangParser.AssignmentExpressionContext) -> T? { return visitChildren(ctx) }
+	open func visitLetExpression(_ ctx: LangParser.LetExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitMultiplicationExpression(_ ctx: LangParser.MultiplicationExpressionContext) -> T? { return visitChildren(ctx) }
+	open func visitIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext) -> T? { return visitChildren(ctx) }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	open func visitAssignmentExpression(_ ctx: LangParser.AssignmentExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -135,7 +142,7 @@ open class LangBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	open func visitBooleanExpression(_ ctx: LangParser.BooleanExpressionContext) -> T? { return visitChildren(ctx) }
+	open func visitBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -150,34 +157,6 @@ open class LangBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	open func visitFuncDefExpression(_ ctx: LangParser.FuncDefExpressionContext) -> T? { return visitChildren(ctx) }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	open func visitStringExpression(_ ctx: LangParser.StringExpressionContext) -> T? { return visitChildren(ctx) }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	open func visitSubtractionExpression(_ ctx: LangParser.SubtractionExpressionContext) -> T? { return visitChildren(ctx) }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	open func visitLetExpression(_ ctx: LangParser.LetExpressionContext) -> T? { return visitChildren(ctx) }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation returns the result of calling
-	 * {@link #visitChildren} on {@code ctx}.</p>
-	 */
-	open func visitDivisionExpression(_ ctx: LangParser.DivisionExpressionContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *

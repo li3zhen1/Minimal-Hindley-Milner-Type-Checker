@@ -145,26 +145,26 @@ open class LangBaseListener: LangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	open func enterAdditionExpression(_ ctx: LangParser.AdditionExpressionContext) { }
+	open func enterBinaryExpression(_ ctx: LangParser.BinaryExpressionContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	open func exitAdditionExpression(_ ctx: LangParser.AdditionExpressionContext) { }
+	open func exitBinaryExpression(_ ctx: LangParser.BinaryExpressionContext) { }
 
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	open func enterNumberExpression(_ ctx: LangParser.NumberExpressionContext) { }
+	open func enterStringLiteral(_ ctx: LangParser.StringLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	open func exitNumberExpression(_ ctx: LangParser.NumberExpressionContext) { }
+	open func exitStringLiteral(_ ctx: LangParser.StringLiteralContext) { }
 
 	/**
 	 * {@inheritDoc}
@@ -184,6 +184,32 @@ open class LangBaseListener: LangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	open func enterLetExpression(_ ctx: LangParser.LetExpressionContext) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	open func exitLetExpression(_ ctx: LangParser.LetExpressionContext) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	open func enterIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	open func exitIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	open func enterAssignmentExpression(_ ctx: LangParser.AssignmentExpressionContext) { }
 	/**
 	 * {@inheritDoc}
@@ -191,19 +217,6 @@ open class LangBaseListener: LangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	open func exitAssignmentExpression(_ ctx: LangParser.AssignmentExpressionContext) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func enterMultiplicationExpression(_ ctx: LangParser.MultiplicationExpressionContext) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func exitMultiplicationExpression(_ ctx: LangParser.MultiplicationExpressionContext) { }
 
 	/**
 	 * {@inheritDoc}
@@ -236,13 +249,13 @@ open class LangBaseListener: LangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	open func enterBooleanExpression(_ ctx: LangParser.BooleanExpressionContext) { }
+	open func enterBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	open func exitBooleanExpression(_ ctx: LangParser.BooleanExpressionContext) { }
+	open func exitBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext) { }
 
 	/**
 	 * {@inheritDoc}
@@ -269,58 +282,6 @@ open class LangBaseListener: LangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	open func exitFuncDefExpression(_ ctx: LangParser.FuncDefExpressionContext) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func enterStringExpression(_ ctx: LangParser.StringExpressionContext) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func exitStringExpression(_ ctx: LangParser.StringExpressionContext) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func enterSubtractionExpression(_ ctx: LangParser.SubtractionExpressionContext) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func exitSubtractionExpression(_ ctx: LangParser.SubtractionExpressionContext) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func enterLetExpression(_ ctx: LangParser.LetExpressionContext) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func exitLetExpression(_ ctx: LangParser.LetExpressionContext) { }
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func enterDivisionExpression(_ ctx: LangParser.DivisionExpressionContext) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	open func exitDivisionExpression(_ ctx: LangParser.DivisionExpressionContext) { }
 
 	/**
 	 * {@inheritDoc}

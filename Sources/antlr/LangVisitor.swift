@@ -113,24 +113,24 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code additionExpression}
+	 * Visit a parse tree produced by the {@code binaryExpression}
 	 * labeled alternative in {@link LangParser#expr}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitAdditionExpression(_ ctx: LangParser.AdditionExpressionContext) -> T {
+	open func visitBinaryExpression(_ ctx: LangParser.BinaryExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code numberExpression}
+	 * Visit a parse tree produced by the {@code stringLiteral}
 	 * labeled alternative in {@link LangParser#expr}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitNumberExpression(_ ctx: LangParser.NumberExpressionContext) -> T {
+	open func visitStringLiteral(_ ctx: LangParser.StringLiteralContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
@@ -146,6 +146,28 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
+	 * Visit a parse tree produced by the {@code letExpression}
+	 * labeled alternative in {@link LangParser#expr}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitLetExpression(_ ctx: LangParser.LetExpressionContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code integerLiteral}
+	 * labeled alternative in {@link LangParser#expr}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
 	 * Visit a parse tree produced by the {@code assignmentExpression}
 	 * labeled alternative in {@link LangParser#expr}.
 	- Parameters:
@@ -153,17 +175,6 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	- returns: the visitor result
 	 */
 	open func visitAssignmentExpression(_ ctx: LangParser.AssignmentExpressionContext) -> T {
-	 	fatalError(#function + " must be overridden")
-	}
-
-	/**
-	 * Visit a parse tree produced by the {@code multiplicationExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	- Parameters:
-	  - ctx: the parse tree
-	- returns: the visitor result
-	 */
-	open func visitMultiplicationExpression(_ ctx: LangParser.MultiplicationExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
@@ -190,13 +201,13 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
-	 * Visit a parse tree produced by the {@code booleanExpression}
+	 * Visit a parse tree produced by the {@code booleanLiteral}
 	 * labeled alternative in {@link LangParser#expr}.
 	- Parameters:
 	  - ctx: the parse tree
 	- returns: the visitor result
 	 */
-	open func visitBooleanExpression(_ ctx: LangParser.BooleanExpressionContext) -> T {
+	open func visitBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 
@@ -219,50 +230,6 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	- returns: the visitor result
 	 */
 	open func visitFuncDefExpression(_ ctx: LangParser.FuncDefExpressionContext) -> T {
-	 	fatalError(#function + " must be overridden")
-	}
-
-	/**
-	 * Visit a parse tree produced by the {@code stringExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	- Parameters:
-	  - ctx: the parse tree
-	- returns: the visitor result
-	 */
-	open func visitStringExpression(_ ctx: LangParser.StringExpressionContext) -> T {
-	 	fatalError(#function + " must be overridden")
-	}
-
-	/**
-	 * Visit a parse tree produced by the {@code subtractionExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	- Parameters:
-	  - ctx: the parse tree
-	- returns: the visitor result
-	 */
-	open func visitSubtractionExpression(_ ctx: LangParser.SubtractionExpressionContext) -> T {
-	 	fatalError(#function + " must be overridden")
-	}
-
-	/**
-	 * Visit a parse tree produced by the {@code letExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	- Parameters:
-	  - ctx: the parse tree
-	- returns: the visitor result
-	 */
-	open func visitLetExpression(_ ctx: LangParser.LetExpressionContext) -> T {
-	 	fatalError(#function + " must be overridden")
-	}
-
-	/**
-	 * Visit a parse tree produced by the {@code divisionExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	- Parameters:
-	  - ctx: the parse tree
-	- returns: the visitor result
-	 */
-	open func visitDivisionExpression(_ ctx: LangParser.DivisionExpressionContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

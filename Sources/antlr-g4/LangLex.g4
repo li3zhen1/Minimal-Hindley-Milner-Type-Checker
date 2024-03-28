@@ -8,6 +8,8 @@ StringLiteral : '"' (.)*? '"' ;
 
 BooleanLiteral: 'true' | 'false' ;
 
+BinaryOperator: '+' | '-' | '*' | '/' | '&&' | '||' | '^' ;
+
 Identifier : Alpha ( Digit | Alpha )* ;
 
 Alpha : [a-zA-Z] ;
