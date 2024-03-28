@@ -7,9 +7,9 @@
                 "swift"
             ],
             "args": [],
-            "cwd": "${workspaceFolder:Minimal-Hindley-Milner-Type-Checker}",
+            "cwd": "${workspaceFolder:HindleyMilnerW}",
             "name": "Debug HindleyMilnerW",
-            "program": "${workspaceFolder:Minimal-Hindley-Milner-Type-Checker}/.build/debug/HindleyMilnerW",
+            "program": "${workspaceFolder:HindleyMilnerW}/.build/debug/HindleyMilnerW",
             "preLaunchTask": "swift: Build Debug HindleyMilnerW"
         },
         {
@@ -19,9 +19,9 @@
                 "swift"
             ],
             "args": [],
-            "cwd": "${workspaceFolder:Minimal-Hindley-Milner-Type-Checker}",
+            "cwd": "${workspaceFolder:HindleyMilnerW}",
             "name": "Release HindleyMilnerW",
-            "program": "${workspaceFolder:Minimal-Hindley-Milner-Type-Checker}/.build/release/HindleyMilnerW",
+            "program": "${workspaceFolder:HindleyMilnerW}/.build/release/HindleyMilnerW",
             "preLaunchTask": "swift: Build Release HindleyMilnerW"
         }
     ]
