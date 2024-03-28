@@ -1,8 +1,17 @@
-struct TypeVariable: Identifiable, Hashable, Equatable, MonoTypeProtocol {
+protocol Typable {
+  var freeVariables: Set<TypeVariable> { get }
+}
+
+enum TypeCheckError: Error {
+  case typeMismatch
+  case infiniteType
+  case unboundVariable
+}
+
+struct TypeVariable: Identifiable, Hashable, Equatable {
   static var nextId = 0
 
   let id: Int
-  var concreateType: MonoType { .variable(self) }
 
   init() {
     self.id = Self.nextId
@@ -17,15 +26,9 @@ enum TypeFunction {
   // case list
 }
 
-protocol MonoTypeProtocol {
-  var concreateType: MonoType { get }
-}
-
-indirect enum MonoType: Equatable, MonoTypeProtocol {
+indirect enum MonoType: Equatable {
   case variable(TypeVariable)
   case functionApplication(TypeFunctionApplication)
-
-  var concreateType: MonoType { self }
 
   static func functionApplication(
     _ C: TypeFunction,
@@ -37,41 +40,16 @@ indirect enum MonoType: Equatable, MonoTypeProtocol {
   static func variable() -> Self {
     .variable(TypeVariable())
   }
-
-  // static func functionApplication<each P>(_ C: TypeFunction, parameters: repeat each P) -> Self
-  // where repeat each P: MonoTypeProtocol {
-  //   var parameters = [MonoType]()
-  //   parameters.reserveCapacity(parameters.count)
-  //   for i in 0..<parameters.count {
-  //     parameters.append(parameters[i].concreateType)
-  //   }
-
-  //   return .functionApplication(TypeFunctionApplication(C, parameters: parameters))
-  // }
 }
 
-struct TypeFunctionApplication: Equatable, MonoTypeProtocol {
+struct TypeFunctionApplication: Equatable {
   let C: TypeFunction
   let parameters: [MonoType]
-
-  var concreateType: MonoType { .functionApplication(self) }
 
   init(_ C: TypeFunction, parameters: [MonoType] = []) {
     self.C = C
     self.parameters = parameters
   }
-
-  // init<each P>(_ C: TypeFunction, parameters: repeat each P) where repeat each P: MonoTypeProtocol {
-  //   self.C = C
-
-  //   var parameters = [MonoType]()
-  //   parameters.reserveCapacity(parameters.count)
-  //   for i in 0..<parameters.count {
-  //     parameters.append(parameters[i])
-  //   }
-
-  //   self.parameters = parameters
-  // }
 }
 
 indirect enum PolyType: Equatable {
@@ -202,10 +180,6 @@ extension PolyType: Instantiatable {
   }
 }
 
-protocol Typable {
-  var freeVariables: Set<TypeVariable> { get }
-}
-
 extension MonoType: Typable {
   var freeVariables: Set<TypeVariable> {
     switch self {
@@ -231,7 +205,6 @@ extension PolyType: Typable {
 }
 
 extension Context: Typable {
-
   var freeVariables: Set<TypeVariable> {
     typeEnv.values.reduce(into: Set<TypeVariable>()) { result, type in
       result.formUnion(type.freeVariables)
@@ -248,14 +221,8 @@ extension Context: Typable {
   }
 }
 
-enum TypeCheckError: Error {
-  case typeMismatch
-  case infiniteType
-  case unboundVariable
-}
 
 extension MonoType {
-
   func contains(_ variable: TypeVariable) -> Bool {
     switch self {
     case .variable(let v):
@@ -270,22 +237,19 @@ extension MonoType {
     case (.variable(let lhs), .variable(let rhs)) where lhs == rhs:
       return .empty
     case (.variable(let lhs), let rhs):
-      if rhs.contains(lhs) {
-        throw TypeCheckError.infiniteType
-      }
+      if rhs.contains(lhs) { throw TypeCheckError.infiniteType }
       return Substitution(raw: [lhs: rhs])
     case (_, .variable):
       return try other.unify(with: self)
     case (.functionApplication(let lhs), .functionApplication(let rhs)):
-      guard lhs.C == rhs.C else { throw TypeCheckError.typeMismatch }
-      guard lhs.parameters.count == rhs.parameters.count else {
+      guard lhs.C == rhs.C && lhs.parameters.count == rhs.parameters.count else {
         throw TypeCheckError.typeMismatch
       }
-      var s = Substitution.empty
+      var result = Substitution.empty
       for (l, r) in zip(lhs.parameters, rhs.parameters) {
-        s = s.combine(with: try s.apply(to: l).unify(with: s.apply(to: r)))
+        result = result.combine(with: try result.apply(to: l).unify(with: result.apply(to: r)))
       }
-      return s
+      return result
     }
   }
 }

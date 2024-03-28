@@ -1,8 +1,6 @@
-
 extension TypeVariable: CustomDebugStringConvertible {
   var debugDescription: String { "τ\(id)" }
 }
-
 
 extension TypeFunction: CustomDebugStringConvertible {
   var debugDescription: String {
@@ -36,8 +34,6 @@ extension TypeFunction: ExpressibleByStringLiteral {
   }
 }
 
-
-
 extension MonoType: CustomDebugStringConvertible {
   var debugDescription: String {
     switch self {
@@ -48,8 +44,6 @@ extension MonoType: CustomDebugStringConvertible {
     }
   }
 }
-
-
 
 extension TypeFunctionApplication: CustomDebugStringConvertible {
   var debugDescription: String {
@@ -62,6 +56,8 @@ extension TypeFunctionApplication: CustomDebugStringConvertible {
 
 extension Substitution: CustomDebugStringConvertible {
   var debugDescription: String {
-    return "Substitution {\n" + raw.map { "  \($0.key.debugDescription) ↦ \($0.value.debugDescription)" }.joined(separator: "\n") + "\n}\n"
+    return "Substitution {\n"
+      + raw.map { "  \($0.key.debugDescription) ↦ \($0.value.debugDescription)" }.joined(
+        separator: "\n") + "\n}\n"
   }
 }
