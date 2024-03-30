@@ -79,10 +79,7 @@ struct AbstractionExpression: ExpressionProtocol {
 
   func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
     let newVariable = MonoType.variable()
-    let newContext = Context(
-      // contextID: context.contextID + 1,
-      typeEnv: context.typeEnv.merging([parameter: .mono(newVariable)]) { _, new in new }
-    )
+    let newContext = context.merge(with: [parameter: .mono(newVariable)])
 
     let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
@@ -91,4 +88,30 @@ struct AbstractionExpression: ExpressionProtocol {
       bodySubstitution
     )
   }
+}
+
+struct LetExpression: ExpressionProtocol {
+  // let name = expr in { body }
+  let name: String
+  let expr: ExpressionProtocol
+  let body: ExpressionProtocol
+
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
+    let (exprType, exprSubstitution) = try expr.typeCheck(in: context)
+    let nameType = exprSubstitution.apply(to: context).generalize(exprType)
+
+    let newContext = exprSubstitution.apply(to: context).merge(with: [name: nameType])
+    let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
+
+    return (bodyType, bodySubstitution.combine(with: exprSubstitution))
+  }
+}
+
+struct Binding: ASTNode {
+  let name: String
+  let expr: ExpressionProtocol
+}
+
+struct BindingList: ASTNode {
+  let bindings: [Binding]
 }

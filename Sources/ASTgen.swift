@@ -46,14 +46,6 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
     fatalError("not implemented")
   }
   
-  override func visitBinding(_ ctx: LangParser.BindingContext) -> ASTNode {
-    fatalError("not implemented")
-  }
-  
-  override func visitBindingList(_ ctx: LangParser.BindingListContext) -> ASTNode {
-    fatalError("not implemented")
-  }
-  
   override func visitFuncParam(_ ctx: LangParser.FuncParamContext) -> ASTNode {
     fatalError("not implemented")
   }
@@ -110,9 +102,37 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
       body: visit(body) as! ExpressionProtocol
     )
   }
+
+  override func visitBinding(_ ctx: LangParser.BindingContext) -> ASTNode {
+    fatalError("should not reach here")
+  }
+  
+  override func visitBindingList(_ ctx: LangParser.BindingListContext) -> ASTNode {
+    let bindings = ctx.binding().compactMap { bindingCtx in
+      let name = (bindingCtx.Identifier()?.getText())!
+      let expr = visit(bindingCtx.expr()!) as! ExpressionProtocol
+      return Binding(name: name, expr: expr)
+    }
+    return BindingList(bindings: bindings)
+  }
   
   override func visitLetExpression(_ ctx: LangParser.LetExpressionContext) -> ASTNode {
-    fatalError("not implemented")
+    
+    let bindings = (visit(ctx.bindingList()!) as! BindingList).bindings
+    var idx = bindings.count - 1
+    
+    var letExpr = LetExpression(
+      name: bindings[idx].name,
+      expr: bindings[idx].expr,
+      // ctx.expr() here is actually the body.
+      body: visit(ctx.expr()!) as! ExpressionProtocol
+    )
+
+    while idx > 0 {
+      idx -= 1
+      letExpr = LetExpression(name: bindings[idx].name, expr: bindings[idx].expr, body: letExpr)
+    }
+    return letExpr
   }
   
   override func visitExprList(_ ctx: LangParser.ExprListContext) -> ASTNode {

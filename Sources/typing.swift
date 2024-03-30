@@ -90,6 +90,12 @@ struct TypeQuantifier: Equatable {
 
 struct Context {
   var typeEnv: [String: PolyType]
+
+  func merge(with newNames: consuming [String: PolyType]) -> Context {
+    return Context(
+      typeEnv: self.typeEnv.merging(newNames) { _, new in new }
+    )
+  }
 }
 
 struct Substitution {
