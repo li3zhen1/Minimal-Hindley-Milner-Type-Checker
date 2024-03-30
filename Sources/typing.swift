@@ -130,7 +130,8 @@ extension Substitution {
     }
     return Context(typeEnv: newTypeEnv)
   }
-
+  
+  /// The result of the combination is equivalent to applying `other` first, then `self`
   consuming func combine(with other: consuming Substitution) -> Substitution {
     var result = copy self
 

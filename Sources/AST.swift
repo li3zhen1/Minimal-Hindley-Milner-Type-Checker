@@ -57,18 +57,18 @@ struct ApplicationExpression: ExpressionProtocol {
   let argument: ExpressionProtocol
 
   func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
-    let (functionType, functionSubstitution) = try function.typeCheck(in: context)
-    let (argumentType, argumentSubstitution) = try argument.typeCheck(in: context)
+    let (funcType, funcSubstitution) = try function.typeCheck(in: context)
+    let (argType, argSubstitution) = try argument.typeCheck(in: funcSubstitution.apply(to: context))
 
     let resultType = MonoType.variable()
-    let substitution = try functionType.unify(
-      with: .functionApplication(.arrow, parameters: [argumentType, resultType]))
+    let substitution = try argSubstitution.apply(to: funcType).unify(
+      with: .functionApplication(.arrow, parameters: [argType, resultType]))
 
     return (
       substitution.apply(to: resultType),
       substitution
-        .combine(with: functionSubstitution)
-        .combine(with: argumentSubstitution)
+        .combine(with: argSubstitution)
+        .combine(with: funcSubstitution)
     )
   }
 }
@@ -87,7 +87,7 @@ struct AbstractionExpression: ExpressionProtocol {
     let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
     return (
-      .functionApplication(.arrow, parameters: [newVariable, bodyType]),
+      bodySubstitution.apply(to: .functionApplication(.arrow, parameters: [newVariable, bodyType])),
       bodySubstitution
     )
   }
