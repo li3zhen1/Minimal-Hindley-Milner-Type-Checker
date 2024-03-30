@@ -37,6 +37,11 @@ class TypeCheckTests: XCTestCase {
     }
 
     do {
+      let ty = try typeCheck("(func a => a)(\"str\")")
+      XCTAssertEqual(ty, stringTy)
+    }
+
+    do {
       let ty = try typeCheck("(func a => a)(odd(one))")
       XCTAssertEqual(ty, boolTy)
     }

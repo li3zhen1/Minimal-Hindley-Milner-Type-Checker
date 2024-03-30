@@ -63,7 +63,10 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   }
   
   override func visitStringLiteral(_ ctx: LangParser.StringLiteralContext) -> ASTNode {
-    fatalError("not implemented")
+    let str = ctx.getText()
+    let startIndex = str.index(after: str.startIndex)
+    let endIndex = str.index(before: str.endIndex)
+    return StringLiteral(value: String(str[startIndex..<endIndex]))
   }
   
   override func visitConditionalExpression(_ ctx: LangParser.ConditionalExpressionContext) -> ASTNode {

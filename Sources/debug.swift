@@ -11,6 +11,8 @@ extension TypeFunction: CustomDebugStringConvertible {
       return "Bool"
     case .int:
       return "Int"
+    case .string:
+      return "String"
     // case .list:
     //   return "List"
     }
@@ -26,6 +28,8 @@ extension TypeFunction: ExpressibleByStringLiteral {
       self = .bool
     case "Int":
       self = .int
+    case "String":
+      self = .string
     // case "List":
     //   self = .list
     default:

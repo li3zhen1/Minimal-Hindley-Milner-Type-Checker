@@ -23,6 +23,7 @@ enum TypeFunction {
   case arrow
   case bool
   case int
+  case string
   // case list
 }
 

@@ -41,6 +41,14 @@ struct BooleanLiteral: ExpressionProtocol {
   }
 }
 
+struct StringLiteral: ExpressionProtocol {
+  let value: String
+
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
+    return (stringTy, .empty)
+  }
+}
+
 struct VariableExpression: ExpressionProtocol {
   let name: String
 

@@ -3,6 +3,7 @@ import Antlr4
 
 let boolTy: MonoType = .functionApplication(.bool, parameters: [])
 let intTy: MonoType = .functionApplication(.int, parameters: [])
+let stringTy: MonoType = .functionApplication(.string, parameters: [])
 
 var myContext = Context(
   typeEnv: [
@@ -16,13 +17,3 @@ var myContext = Context(
     "one": .functionApplication(.int, parameters: []),
   ]
 )
-
-// let oddOne = ApplicationExpression(
-//   function: VariableExpression(name: "odd"),
-//   argument: VariableExpression(name: "one")
-// )
-
-// let notOddOne = ApplicationExpression(
-//   function: VariableExpression(name: "not"),
-//   argument: oddOne
-// )
