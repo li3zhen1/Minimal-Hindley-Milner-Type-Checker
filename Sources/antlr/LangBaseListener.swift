@@ -158,6 +158,19 @@ open class LangBaseListener: LangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	open func enterExpressionList(_ ctx: LangParser.ExpressionListContext) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	open func exitExpressionList(_ ctx: LangParser.ExpressionListContext) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	open func enterStringLiteral(_ ctx: LangParser.StringLiteralContext) { }
 	/**
 	 * {@inheritDoc}

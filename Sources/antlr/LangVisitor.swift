@@ -124,6 +124,17 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
+	 * Visit a parse tree produced by the {@code expressionList}
+	 * labeled alternative in {@link LangParser#expr}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitExpressionList(_ ctx: LangParser.ExpressionListContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
 	 * Visit a parse tree produced by the {@code stringLiteral}
 	 * labeled alternative in {@link LangParser#expr}.
 	- Parameters:

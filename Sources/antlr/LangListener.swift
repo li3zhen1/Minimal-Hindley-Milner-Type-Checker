@@ -147,6 +147,20 @@ public protocol LangListener: ParseTreeListener {
 	 */
 	func exitBinaryExpression(_ ctx: LangParser.BinaryExpressionContext)
 	/**
+	 * Enter a parse tree produced by the {@code expressionList}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterExpressionList(_ ctx: LangParser.ExpressionListContext)
+	/**
+	 * Exit a parse tree produced by the {@code expressionList}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitExpressionList(_ ctx: LangParser.ExpressionListContext)
+	/**
 	 * Enter a parse tree produced by the {@code stringLiteral}
 	 * labeled alternative in {@link LangParser#expr}.
 	 - Parameters:

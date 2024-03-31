@@ -93,6 +93,13 @@ open class LangBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	open func visitExpressionList(_ ctx: LangParser.ExpressionListContext) -> T? { return visitChildren(ctx) }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	open func visitStringLiteral(_ ctx: LangParser.StringLiteralContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}

@@ -8,7 +8,7 @@ typeDef      : 'type' Identifier '=' typeExpr ;
 
 typeExpr     : Identifier                                         # aliasing
              | '(' (typeExpr (',' typeExpr)*)? ')'                # productType
-             | typeExpr '|' typeExpr                              # sumType
+             | lhs=typeExpr '|' rhs=typeExpr                      # sumType
              ;
 
 typeHint     : ':' typeExpr ;
@@ -24,12 +24,13 @@ expr         : IntegerLiteral                                     # integerLiter
              | BooleanLiteral                                     # booleanLiteral
              | Identifier                                         # variableExpression
              | '(' expr ')'                                       # parenExpression
-             | expr BinaryOperator expr                           # binaryExpression
+             | exprList                                           # expressionList
+             | lhs=expr BinaryOperator rhs=expr                   # binaryExpression
              | 'let' bindingList 'in' '{' expr '}'                # letExpression
              | 'func' funcParamList '=>' expr                     # funcDefExpression
-             | expr '(' exprList ')'                              # funcAppExpression
+             | function=expr arg=expr                             # funcAppExpression
              | 'if' expr 'then' expr 'else' expr                  # conditionalExpression
              | Identifier typeHint? '=' expr                      # assignmentExpression
              ;
 
-exprList     : (expr (',' expr)*)? ;
+exprList     : '(' (expr (',' expr)*)? ')' ;
