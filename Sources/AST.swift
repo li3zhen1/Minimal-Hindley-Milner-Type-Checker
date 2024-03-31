@@ -115,6 +115,29 @@ struct LetExpression: ExpressionProtocol {
   }
 }
 
+struct TupleExpression: ExpressionProtocol {
+  let elements: [ExpressionProtocol]
+
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
+    if elements.count == 0 {
+      return (.functionApplication(.tuple(0), parameters: []), .empty)
+    }
+    var typeList = [MonoType]()
+    var substitution = Substitution(raw: [:])
+
+    for ele in elements {
+      let checkRes = try ele.typeCheck(in: context)
+      typeList.append(checkRes.0)
+      substitution = substitution.combine(with: checkRes.1)
+    }
+
+    return (
+      .functionApplication(.tuple(elements.count), parameters: typeList),
+      substitution
+    )
+  }
+}
+
 struct Binding: ASTNode {
   let name: String
   let expr: ExpressionProtocol

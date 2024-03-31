@@ -80,15 +80,16 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   override func visitParenExpression(_ ctx: LangParser.ParenExpressionContext) -> ASTNode {
     return visit(ctx.expr()!)!
   }
+
+  override func visitExpressionList(_ ctx: LangParser.ExpressionListContext) -> ASTNode {    
+    let children = ctx.exprList()?.children?.compactMap { visit($0) as? ExpressionProtocol }
+    return TupleExpression(elements: children ?? [])
+  }
   
   override func visitFuncAppExpression(_ ctx: LangParser.FuncAppExpressionContext) -> ASTNode {
-    guard let function = ctx.expr(), ctx.exprList()?.expr().count == 1 else {
-      fatalError("not implemented")
-    }
-
     return ApplicationExpression(
-      function: visit(function) as! ExpressionProtocol,
-      argument: visit((ctx.exprList()?.expr()[0])!) as! ExpressionProtocol
+      function: visit(ctx.function) as! ExpressionProtocol,
+      argument: visit(ctx.arg) as! ExpressionProtocol
     )
   }
   
@@ -139,6 +140,6 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   }
   
   override func visitExprList(_ ctx: LangParser.ExprListContext) -> ASTNode {
-    fatalError("not implemented")
+    fatalError("should not reach here")
   }
 }

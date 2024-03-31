@@ -19,11 +19,12 @@ struct TypeVariable: Identifiable, Hashable, Equatable {
   }
 }
 
-enum TypeFunction {
+enum TypeFunction: Equatable {
   case arrow
   case bool
   case int
   case string
+  case tuple(Int)
   // case list
 }
 

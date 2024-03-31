@@ -1,5 +1,8 @@
 import Antlr4
 
+func buildTupleTy(_ types: MonoType...) -> MonoType {
+  return .functionApplication(.tuple(types.count), parameters: types)
+}
 
 let boolTy: MonoType = .functionApplication(.bool, parameters: [])
 let intTy: MonoType = .functionApplication(.int, parameters: [])

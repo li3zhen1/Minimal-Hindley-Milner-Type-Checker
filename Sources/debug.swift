@@ -13,6 +13,8 @@ extension TypeFunction: CustomDebugStringConvertible {
       return "Int"
     case .string:
       return "String"
+    case .tuple(let length):
+      return "Tuple(\(length))"
     // case .list:
     //   return "List"
     }
@@ -51,10 +53,15 @@ extension MonoType: CustomDebugStringConvertible {
 
 extension TypeFunctionApplication: CustomDebugStringConvertible {
   var debugDescription: String {
-    if parameters.isEmpty {
+    switch C {
+    case .bool, .int, .string:
       return C.debugDescription
+    case .arrow:
+      return parameters.map { $0.debugDescription }.joined(separator: " -> ")
+    case .tuple(_):
+      let typeList = parameters.map { $0.debugDescription }.joined(separator: ", ")
+      return "Tuple(\(typeList))"
     }
-    return self.parameters.map { $0.debugDescription }.joined(separator: " -> ")
   }
 }
 
