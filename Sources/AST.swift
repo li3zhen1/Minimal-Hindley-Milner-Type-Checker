@@ -146,3 +146,29 @@ struct Binding: ASTNode {
 struct BindingList: ASTNode {
   let bindings: [Binding]
 }
+
+struct ConditionExpression: ExpressionProtocol {
+  let condExpr: ExpressionProtocol
+  let thenExpr: ExpressionProtocol
+  let elseExpr: ExpressionProtocol
+
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
+    let (condType, condSubstitution) = try condExpr.typeCheck(in: context)
+    var substitution = try condType.unify(with: boolTy)
+    substitution = substitution.combine(with: condSubstitution)
+
+    let (thenType, thenSubstitution) = try thenExpr.typeCheck(in: context)
+    substitution = thenSubstitution.combine(with: substitution)
+    let (elseType, elseSubstitution) = try elseExpr.typeCheck(in: context)
+    substitution = elseSubstitution.combine(with: substitution)
+
+    let unifySubstitution = try substitution.apply(to: thenType)
+                                  .unify(with: substitution.apply(to: elseType))
+    substitution = unifySubstitution.combine(with: substitution)
+    
+    return (
+      unifySubstitution.apply(to: thenType),
+      substitution
+    )
+  }
+}

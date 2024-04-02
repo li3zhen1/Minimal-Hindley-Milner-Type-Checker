@@ -70,7 +70,11 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   }
   
   override func visitConditionalExpression(_ ctx: LangParser.ConditionalExpressionContext) -> ASTNode {
-    fatalError("not implemented")
+    return ConditionExpression(
+      condExpr: visit(ctx.expr(0)!) as! ExpressionProtocol,
+      thenExpr: visit(ctx.expr(1)!) as! ExpressionProtocol,
+      elseExpr: visit(ctx.expr(2)!) as! ExpressionProtocol
+    )
   }
   
   override func visitAssignmentExpression(_ ctx: LangParser.AssignmentExpressionContext) -> ASTNode {
