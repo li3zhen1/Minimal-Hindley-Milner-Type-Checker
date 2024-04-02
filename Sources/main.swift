@@ -23,16 +23,25 @@ func typeCheck(_ source: String) throws -> MonoType {
   return (try ast.typeCheck(in: myContext)).0
 }
 
+func typeCheckWrapper(_ source: String) {
+  do {
+    let res = try typeCheck(source)
+    print("type is: \(res)")
+  } catch (let err) {
+    print("err: \(err)")
+  }
+}
+
+if CommandLine.arguments.count > 1 {
+  print("input: \(CommandLine.arguments[1])")
+  typeCheckWrapper(CommandLine.arguments[1])
+  exit(EXIT_SUCCESS)
+}
+
 while true {
   print("> ", terminator: "")
   if let input = readLine() {
-    do {
-      let res = try typeCheck(input)
-      print("type is: \(res)")
-    } catch (let err) {
-      print("err: \(err)")
-    }
-
+    typeCheckWrapper(input)
   } else {
     break
   }
