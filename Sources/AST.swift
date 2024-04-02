@@ -92,7 +92,7 @@ struct AbstractionExpression: ExpressionProtocol {
     let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
     return (
-      bodySubstitution.apply(to: .functionApplication(.arrow, parameters: [newVariable, bodyType])),
+      .functionApplication(.arrow, parameters: [bodySubstitution.apply(to:newVariable), bodyType]),
       bodySubstitution
     )
   }
@@ -128,11 +128,11 @@ struct TupleExpression: ExpressionProtocol {
     for ele in elements {
       let checkRes = try ele.typeCheck(in: context)
       typeList.append(checkRes.0)
-      substitution = substitution.combine(with: checkRes.1)
+      substitution = checkRes.1.combine(with: substitution)
     }
 
     return (
-      .functionApplication(.tuple(elements.count), parameters: typeList),
+      substitution.apply(to: .functionApplication(.tuple(elements.count), parameters: typeList)),
       substitution
     )
   }
