@@ -142,6 +142,16 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
     }
     return letExpr
   }
+
+  override func visitBinaryExpression(_ ctx: LangParser.BinaryExpressionContext) -> ASTNode {
+    return ApplicationExpression(
+      function: ApplicationExpression(
+        function: VariableExpression(name: (ctx.BinaryOperator()?.getText())!),
+        argument: visit(ctx.lhs) as! ExpressionProtocol
+      ),
+      argument: visit(ctx.rhs) as! ExpressionProtocol
+    )
+  }
   
   override func visitExprList(_ ctx: LangParser.ExprListContext) -> ASTNode {
     fatalError("should not reach here")

@@ -44,6 +44,16 @@ indirect enum MonoType: Equatable {
   }
 }
 
+precedencegroup RightAssociativePrecedence {
+  associativity: right
+}
+
+infix operator =>: RightAssociativePrecedence
+
+func => (arg: MonoType, ret: MonoType) -> MonoType {
+  return .functionApplication(.arrow, parameters: [arg, ret])
+}
+
 struct TypeFunctionApplication: Equatable {
   let C: TypeFunction
   let parameters: [MonoType]

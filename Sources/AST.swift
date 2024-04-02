@@ -1,4 +1,3 @@
-
 protocol ASTNode {}
 
 protocol ExpressionProtocol: ASTNode {
@@ -92,7 +91,8 @@ struct AbstractionExpression: ExpressionProtocol {
     let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
     return (
-      .functionApplication(.arrow, parameters: [bodySubstitution.apply(to:newVariable), bodyType]),
+      .functionApplication(
+        .arrow, parameters: [bodySubstitution.apply(to: newVariable), bodyType]),
       bodySubstitution
     )
   }

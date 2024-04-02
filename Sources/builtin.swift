@@ -1,4 +1,3 @@
-import Antlr4
 
 func buildTupleTy(_ types: MonoType...) -> MonoType {
   return .functionApplication(.tuple(types.count), parameters: types)
@@ -10,13 +9,19 @@ let stringTy: MonoType = .functionApplication(.string, parameters: [])
 
 var myContext = Context(
   typeEnv: [
-    "not": .functionApplication(.arrow, parameters: [boolTy, boolTy]),
-    "and": .functionApplication(
-      .arrow, parameters: [boolTy, .functionApplication(.arrow, parameters: [boolTy, boolTy])]),
-    "odd": .functionApplication(.arrow, parameters: [intTy, boolTy]),
-    "even": .functionApplication(.arrow, parameters: [intTy, boolTy]),
-    "true": .functionApplication(.bool, parameters: []),
-    "false": .functionApplication(.bool, parameters: []),
-    "one": .functionApplication(.int, parameters: []),
+    "+": .mono(intTy => intTy => intTy),
+    "-": .mono(intTy => intTy => intTy),
+    "*": .mono(intTy => intTy => intTy),
+    "/": .mono(intTy => intTy => intTy),
+    "^": .mono(boolTy => boolTy => boolTy),
+    "&&": .mono(boolTy => boolTy => boolTy),
+    "||": .mono(boolTy => boolTy => boolTy),
+    "not": .mono(boolTy => boolTy),
+    "and": .mono(boolTy => boolTy => boolTy),
+    "odd": .mono(intTy => boolTy),
+    "even": .mono(intTy => boolTy),
+    "true": .mono(boolTy),
+    "false": .mono(boolTy),
+    "one": .mono(intTy),
   ]
 )
