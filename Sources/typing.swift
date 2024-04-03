@@ -6,6 +6,7 @@ enum TypeCheckError: Error {
   case typeMismatch
   case infiniteType
   case unboundVariable
+  case undefinedType
 }
 
 struct TypeVariable: Identifiable, Hashable, Equatable {

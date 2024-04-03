@@ -4,6 +4,10 @@ protocol ExpressionProtocol: ASTNode {
   func typeCheck(in context: Context) throws -> (MonoType, Substitution)
 }
 
+protocol TypeExpression: ASTNode {
+  func getType() throws -> MonoType
+}
+
 struct Program: ASTNode {
   let expressions: [ASTNode]
 
@@ -82,17 +86,18 @@ struct ApplicationExpression: ExpressionProtocol {
 
 struct AbstractionExpression: ExpressionProtocol {
   let parameter: String
+  let typeHint: TypeExpression?
   let body: ExpressionProtocol
 
   func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
-    let newVariable = MonoType.variable()
-    let newContext = context.merge(with: [parameter: .mono(newVariable)])
+    let paramType = try typeHint?.getType() ?? MonoType.variable()
+    let newContext = context.merge(with: [parameter: .mono(paramType)])
 
     let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
     return (
       .functionApplication(
-        .arrow, parameters: [bodySubstitution.apply(to: newVariable), bodyType]),
+        .arrow, parameters: [bodySubstitution.apply(to: paramType), bodyType]),
       bodySubstitution
     )
   }
@@ -101,17 +106,28 @@ struct AbstractionExpression: ExpressionProtocol {
 struct LetExpression: ExpressionProtocol {
   // let name = expr in { body }
   let name: String
+  let typeHint: TypeExpression?
   let expr: ExpressionProtocol
   let body: ExpressionProtocol
 
   func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
     let (exprType, exprSubstitution) = try expr.typeCheck(in: context)
-    let nameType = exprSubstitution.apply(to: context).generalize(exprType)
+    let nameType: PolyType
+    let substitution: Substitution
 
-    let newContext = exprSubstitution.apply(to: context).merge(with: [name: nameType])
+    if let hint = typeHint {
+      let hintType = try hint.getType()
+      substitution = try exprType.unify(with: hintType).combine(with: exprSubstitution)
+      nameType = .mono(hintType)
+    } else {
+      substitution = exprSubstitution
+      nameType = exprSubstitution.apply(to: context).generalize(exprType)
+    }
+
+    let newContext = substitution.apply(to: context).merge(with: [name: nameType])
     let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
-    return (bodyType, bodySubstitution.combine(with: exprSubstitution))
+    return (bodyType, bodySubstitution.combine(with: substitution))
   }
 }
 
@@ -140,6 +156,7 @@ struct TupleExpression: ExpressionProtocol {
 
 struct Binding: ASTNode {
   let name: String
+  let typeHint: TypeExpression?
   let expr: ExpressionProtocol
 }
 
@@ -171,4 +188,43 @@ struct ConditionExpression: ExpressionProtocol {
       substitution
     )
   }
+}
+
+struct SumTypeExpression: TypeExpression {
+  let lhs: TypeExpression
+  let rhs: TypeExpression
+
+  func getType() throws -> MonoType {
+    fatalError("not implemented")
+  }
+}
+
+struct ProductTypeExpression: TypeExpression {
+  let members: [TypeExpression]
+
+  func getType() throws -> MonoType {
+    return .functionApplication(.tuple(members.count),
+      parameters: try members.map { try $0.getType() })
+  }
+}
+
+struct FunctionTypeExpression: TypeExpression {
+  let arg: TypeExpression
+  let ret: TypeExpression
+
+  func getType() throws -> MonoType {
+    return (try arg.getType()) => (try ret.getType())
+  }
+}
+
+struct NamedTypeExpression: TypeExpression {
+  let name: String
+
+  func getType() throws -> MonoType {
+    guard let type = namedTypeContext[name] else {
+      throw TypeCheckError.undefinedType
+    }
+    return type
+  }
+  
 }

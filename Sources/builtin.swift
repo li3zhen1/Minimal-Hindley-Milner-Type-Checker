@@ -25,3 +25,9 @@ var myContext = Context(
     "one": .mono(intTy),
   ]
 )
+
+var namedTypeContext: [String: MonoType] = [
+  "Int": intTy,
+  "Bool": boolTy,
+  "String": stringTy,
+]

@@ -29,13 +29,25 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   override func visitTypeDef(_ ctx: LangParser.TypeDefContext) -> ASTNode {
     fatalError("not implemented")
   }
+
+  override func visitParenTypeExpr(_ ctx: LangParser.ParenTypeExprContext) -> ASTNode {
+    return visit(ctx.typeExpr()!)!
+  }
+
+  override func visitFuncType(_ ctx: LangParser.FuncTypeContext) -> ASTNode {
+    return FunctionTypeExpression(
+      arg: visit(ctx.arg) as! TypeExpression,
+      ret: visit(ctx.ret) as! TypeExpression
+    )
+  }
   
   override func visitAliasing(_ ctx: LangParser.AliasingContext) -> ASTNode {
-    fatalError("not implemented")
+    return NamedTypeExpression(name: (ctx.Identifier()?.getText())!)
   }
   
   override func visitProductType(_ ctx: LangParser.ProductTypeContext) -> ASTNode {
-    fatalError("not implemented")
+    let members = ctx.typeExpr().map { visit($0) as! TypeExpression }
+    return ProductTypeExpression(members: members)
   }
   
   override func visitSumType(_ ctx: LangParser.SumTypeContext) -> ASTNode {
@@ -43,7 +55,7 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   }
   
   override func visitTypeHint(_ ctx: LangParser.TypeHintContext) -> ASTNode {
-    fatalError("not implemented")
+    return visit(ctx.typeExpr()!)!
   }
   
   override func visitFuncParam(_ ctx: LangParser.FuncParamContext) -> ASTNode {
@@ -105,8 +117,11 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
     guard ctx.funcParamList()?.funcParam().count == 1, let body = ctx.expr() else {
       fatalError("not implemented")
     }
+    let firstParam = (ctx.funcParamList()?.funcParam().first)!
+    
     return AbstractionExpression(
-      parameter: (ctx.funcParamList()?.funcParam()[0].Identifier()?.getText())!,
+      parameter: (firstParam.Identifier()?.getText())!,
+      typeHint: firstParam.typeHint().flatMap { visit($0) as? TypeExpression },
       body: visit(body) as! ExpressionProtocol
     )
   }
@@ -119,7 +134,8 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
     let bindings = ctx.binding().compactMap { bindingCtx in
       let name = (bindingCtx.Identifier()?.getText())!
       let expr = visit(bindingCtx.expr()!) as! ExpressionProtocol
-      return Binding(name: name, expr: expr)
+      let typeExpr = bindingCtx.typeHint().flatMap { visit($0) as? TypeExpression }
+      return Binding(name: name, typeHint: typeExpr, expr: expr)
     }
     return BindingList(bindings: bindings)
   }
@@ -127,19 +143,24 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   override func visitLetExpression(_ ctx: LangParser.LetExpressionContext) -> ASTNode {
     
     let bindings = (visit(ctx.bindingList()!) as! BindingList).bindings
-    var idx = bindings.count - 1
     
     var letExpr = LetExpression(
-      name: bindings[idx].name,
-      expr: bindings[idx].expr,
+      name: bindings.last!.name,
+      typeHint: bindings.last!.typeHint,
+      expr: bindings.last!.expr,
       // ctx.expr() here is actually the body.
       body: visit(ctx.expr()!) as! ExpressionProtocol
     )
 
-    while idx > 0 {
-      idx -= 1
-      letExpr = LetExpression(name: bindings[idx].name, expr: bindings[idx].expr, body: letExpr)
+    for i in (0 ..< bindings.count - 1).reversed() {
+      letExpr = LetExpression(
+        name: bindings[i].name,
+        typeHint: bindings[i].typeHint,
+        expr: bindings[i].expr,
+        body: letExpr
+      )
     }
+
     return letExpr
   }
 

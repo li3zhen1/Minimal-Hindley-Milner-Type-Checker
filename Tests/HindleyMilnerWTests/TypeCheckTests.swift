@@ -90,4 +90,37 @@ class TypeCheckTests: XCTestCase {
     }
   }
 
+  func testBinaryExpression() throws {
+    do {
+      let ty = try typeCheck("1 + 2")
+      XCTAssertEqual(ty, intTy)
+    }
+
+    do {
+      let ty = try typeCheck("(func a => a + 1) 1")
+      XCTAssertEqual(ty, intTy)
+    }
+
+    do {
+      XCTAssertThrowsError(try typeCheck("bool - false"))
+      XCTAssertThrowsError(try typeCheck("1 * false"))
+    }
+  }
+
+  func testTypeHint() throws {
+    do {
+      let ty = try typeCheck("(func a: Int => a) 10")
+      XCTAssertEqual(ty, intTy)
+    }
+
+    do {
+      let ty = try typeCheck("let a: (Int, Bool) = (func a => a)(3, true) in { a }")
+      XCTAssertEqual(ty, buildTupleTy(intTy, boolTy))
+    }
+
+    do {
+      XCTAssertThrowsError(try typeCheck("func a: Int => (not a)"))
+      XCTAssertThrowsError(try typeCheck("let a: (Int, Bool) = (func a => a)(3, 3) in { () }"))
+    }
+  }
 }
