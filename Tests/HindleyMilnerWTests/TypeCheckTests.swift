@@ -68,13 +68,25 @@ class TypeCheckTests: XCTestCase {
     }
 
     do {
+      XCTAssertThrowsError(
+        try typeCheck("if (func a => a)(1) then 3 else 1")
+      )
+    }
+
+    do {
+      XCTAssertThrowsError(
+        try typeCheck("if not (false || true) then \"str\" else 1")
+      )
+    }
+
+    do {
       let ty = try typeCheck("""
       func a =>
         let b = a in {
           (b, if (let c = b in { not (odd c) }) then odd a else true)
         }
       """)
-      XCTAssertEqual(ty, .functionApplication(.arrow, parameters: [intTy, buildTupleTy(intTy, boolTy)]))
+      XCTAssertEqual(ty, intTy => buildTupleTy(intTy, boolTy))
     }
   }
 
