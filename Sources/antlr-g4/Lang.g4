@@ -7,8 +7,10 @@ program      : (typeDef | expr)* EOF;
 typeDef      : 'type' Identifier '=' typeExpr ;
 
 typeExpr     : Identifier                                         # aliasing
+             | '(' typeExpr ')'                                   # parenTypeExpr
              | '(' (typeExpr (',' typeExpr)*)? ')'                # productType
              | lhs=typeExpr '|' rhs=typeExpr                      # sumType
+             | arg=typeExpr '->' ret=typeExpr                     # funcType
              ;
 
 typeHint     : ':' typeExpr ;

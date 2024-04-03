@@ -30,6 +30,13 @@ open class LangBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	open func visitParenTypeExpr(_ ctx: LangParser.ParenTypeExprContext) -> T? { return visitChildren(ctx) }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	open func visitAliasing(_ ctx: LangParser.AliasingContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
@@ -45,6 +52,13 @@ open class LangBaseVisitor<T>: AbstractParseTreeVisitor<T> {
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	open func visitSumType(_ ctx: LangParser.SumTypeContext) -> T? { return visitChildren(ctx) }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	open func visitFuncType(_ ctx: LangParser.FuncTypeContext) -> T? { return visitChildren(ctx) }
 	/**
 	 * {@inheritDoc}
 	 *

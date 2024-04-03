@@ -31,6 +31,20 @@ public protocol LangListener: ParseTreeListener {
 	 */
 	func exitTypeDef(_ ctx: LangParser.TypeDefContext)
 	/**
+	 * Enter a parse tree produced by the {@code parenTypeExpr}
+	 * labeled alternative in {@link LangParser#typeExpr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterParenTypeExpr(_ ctx: LangParser.ParenTypeExprContext)
+	/**
+	 * Exit a parse tree produced by the {@code parenTypeExpr}
+	 * labeled alternative in {@link LangParser#typeExpr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitParenTypeExpr(_ ctx: LangParser.ParenTypeExprContext)
+	/**
 	 * Enter a parse tree produced by the {@code aliasing}
 	 * labeled alternative in {@link LangParser#typeExpr}.
 	 - Parameters:
@@ -72,6 +86,20 @@ public protocol LangListener: ParseTreeListener {
 	   - ctx: the parse tree
 	 */
 	func exitSumType(_ ctx: LangParser.SumTypeContext)
+	/**
+	 * Enter a parse tree produced by the {@code funcType}
+	 * labeled alternative in {@link LangParser#typeExpr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterFuncType(_ ctx: LangParser.FuncTypeContext)
+	/**
+	 * Exit a parse tree produced by the {@code funcType}
+	 * labeled alternative in {@link LangParser#typeExpr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitFuncType(_ ctx: LangParser.FuncTypeContext)
 	/**
 	 * Enter a parse tree produced by {@link LangParser#typeHint}.
 	 - Parameters:

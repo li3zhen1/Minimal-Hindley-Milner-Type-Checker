@@ -30,6 +30,17 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	}
 
 	/**
+	 * Visit a parse tree produced by the {@code parenTypeExpr}
+	 * labeled alternative in {@link LangParser#typeExpr}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitParenTypeExpr(_ ctx: LangParser.ParenTypeExprContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
 	 * Visit a parse tree produced by the {@code aliasing}
 	 * labeled alternative in {@link LangParser#typeExpr}.
 	- Parameters:
@@ -59,6 +70,17 @@ open class LangVisitor<T>: ParseTreeVisitor<T> {
 	- returns: the visitor result
 	 */
 	open func visitSumType(_ ctx: LangParser.SumTypeContext) -> T {
+	 	fatalError(#function + " must be overridden")
+	}
+
+	/**
+	 * Visit a parse tree produced by the {@code funcType}
+	 * labeled alternative in {@link LangParser#typeExpr}.
+	- Parameters:
+	  - ctx: the parse tree
+	- returns: the visitor result
+	 */
+	open func visitFuncType(_ ctx: LangParser.FuncTypeContext) -> T {
 	 	fatalError(#function + " must be overridden")
 	}
 

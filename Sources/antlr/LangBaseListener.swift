@@ -41,6 +41,19 @@ open class LangBaseListener: LangListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	open func enterParenTypeExpr(_ ctx: LangParser.ParenTypeExprContext) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	open func exitParenTypeExpr(_ ctx: LangParser.ParenTypeExprContext) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	open func enterAliasing(_ ctx: LangParser.AliasingContext) { }
 	/**
 	 * {@inheritDoc}
@@ -74,6 +87,19 @@ open class LangBaseListener: LangListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	open func exitSumType(_ ctx: LangParser.SumTypeContext) { }
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	open func enterFuncType(_ ctx: LangParser.FuncTypeContext) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	open func exitFuncType(_ ctx: LangParser.FuncTypeContext) { }
 
 	/**
 	 * {@inheritDoc}
