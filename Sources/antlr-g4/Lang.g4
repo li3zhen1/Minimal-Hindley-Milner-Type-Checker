@@ -10,7 +10,7 @@ typeExpr     : Identifier                                         # aliasing
              | '(' typeExpr ')'                                   # parenTypeExpr
              | '(' (typeExpr (',' typeExpr)*)? ')'                # productType
              | lhs=typeExpr '|' rhs=typeExpr                      # sumType
-             | arg=typeExpr '->' ret=typeExpr                     # funcType
+             | <assoc=right> arg=typeExpr '->' ret=typeExpr       # funcType
              ;
 
 typeHint     : ':' typeExpr ;

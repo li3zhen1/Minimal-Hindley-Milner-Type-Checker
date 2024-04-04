@@ -119,6 +119,11 @@ class TypeCheckTests: XCTestCase {
     }
 
     do {
+      let ty = try typeCheck("(func a: Int -> Int -> Int => (a 1)) (func a => func a => a)")
+      XCTAssertEqual(ty, intTy => intTy)
+    }
+
+    do {
       XCTAssertThrowsError(try typeCheck("func a: Int => (not a)"))
       XCTAssertThrowsError(try typeCheck("let a: (Int, Bool) = (func a => a)(3, 3) in { () }"))
     }
