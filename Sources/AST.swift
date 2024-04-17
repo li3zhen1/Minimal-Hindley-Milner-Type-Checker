@@ -142,9 +142,9 @@ struct TupleExpression: ExpressionProtocol {
     var substitution = Substitution(raw: [:])
 
     for ele in elements {
-      let checkRes = try ele.typeCheck(in: context)
+      let checkRes = try ele.typeCheck(in: substitution.apply(to: context))
       typeList.append(checkRes.0)
-      substitution = checkRes.1.combine(with: substitution)
+      substitution = substitution.combine(with: checkRes.1)
     }
 
     return (
@@ -189,6 +189,31 @@ struct ConditionExpression: ExpressionProtocol {
     )
   }
 }
+
+struct MemberExpression: ExpressionProtocol {
+  let objectExpr: ExpressionProtocol
+  let index: Int
+
+  func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
+    let (objType, objSubstitution) = try objectExpr.typeCheck(in: context)
+
+    // If we already know that the object is a tuple, then we directly take
+    // the type of the member at `index`.
+    if case .functionApplication(let app) = objType {
+      if case .tuple(let tupleSize) = app.C, index < tupleSize {
+        return (app.parameters[index], objSubstitution)
+      } else {
+        throw TypeCheckError.typeMismatch
+      }
+    }
+    // If the type of the object is unknown, the inference stops here.
+    // Found it too complicated to support full inference.
+    else {
+      throw TypeCheckError.insufficientContext
+    }
+  }
+}
+
 
 struct SumTypeExpression: TypeExpression {
   let lhs: TypeExpression

@@ -177,4 +177,11 @@ class TreeBuildVisitor: LangVisitor<ASTNode> {
   override func visitExprList(_ ctx: LangParser.ExprListContext) -> ASTNode {
     fatalError("should not reach here")
   }
+
+  override func visitMemberExpression(_ ctx: LangParser.MemberExpressionContext) -> ASTNode {
+    return MemberExpression(
+      objectExpr: visit(ctx.object) as! ExpressionProtocol,
+      index: Int(ctx.index.getText()!)!
+    )
+  }
 }

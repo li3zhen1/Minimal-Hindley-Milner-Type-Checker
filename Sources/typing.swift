@@ -7,6 +7,7 @@ enum TypeCheckError: Error {
   case infiniteType
   case unboundVariable
   case undefinedType
+  case insufficientContext
 }
 
 struct TypeVariable: Identifiable, Hashable, Equatable {
