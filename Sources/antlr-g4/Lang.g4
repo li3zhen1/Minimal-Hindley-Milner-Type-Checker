@@ -26,11 +26,12 @@ expr         : IntegerLiteral                                     # integerLiter
              | BooleanLiteral                                     # booleanLiteral
              | Identifier                                         # variableExpression
              | '(' expr ')'                                       # parenExpression
+             | object=expr '.' index=IntegerLiteral               # memberExpression
              | exprList                                           # expressionList
              | lhs=expr BinaryOperator rhs=expr                   # binaryExpression
              | 'let' bindingList 'in' '{' expr '}'                # letExpression
-             | 'func' funcParamList '=>' expr                     # funcDefExpression
              | function=expr arg=expr                             # funcAppExpression
+             | 'func' funcParamList '=>' expr                     # funcDefExpression
              | 'if' expr 'then' expr 'else' expr                  # conditionalExpression
              | Identifier typeHint? '=' expr                      # assignmentExpression
              ;

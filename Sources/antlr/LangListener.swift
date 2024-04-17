@@ -161,48 +161,6 @@ public protocol LangListener: ParseTreeListener {
 	 */
 	func exitFuncParamList(_ ctx: LangParser.FuncParamListContext)
 	/**
-	 * Enter a parse tree produced by the {@code binaryExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func enterBinaryExpression(_ ctx: LangParser.BinaryExpressionContext)
-	/**
-	 * Exit a parse tree produced by the {@code binaryExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func exitBinaryExpression(_ ctx: LangParser.BinaryExpressionContext)
-	/**
-	 * Enter a parse tree produced by the {@code expressionList}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func enterExpressionList(_ ctx: LangParser.ExpressionListContext)
-	/**
-	 * Exit a parse tree produced by the {@code expressionList}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func exitExpressionList(_ ctx: LangParser.ExpressionListContext)
-	/**
-	 * Enter a parse tree produced by the {@code stringLiteral}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func enterStringLiteral(_ ctx: LangParser.StringLiteralContext)
-	/**
-	 * Exit a parse tree produced by the {@code stringLiteral}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func exitStringLiteral(_ ctx: LangParser.StringLiteralContext)
-	/**
 	 * Enter a parse tree produced by the {@code conditionalExpression}
 	 * labeled alternative in {@link LangParser#expr}.
 	 - Parameters:
@@ -216,34 +174,6 @@ public protocol LangListener: ParseTreeListener {
 	   - ctx: the parse tree
 	 */
 	func exitConditionalExpression(_ ctx: LangParser.ConditionalExpressionContext)
-	/**
-	 * Enter a parse tree produced by the {@code letExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func enterLetExpression(_ ctx: LangParser.LetExpressionContext)
-	/**
-	 * Exit a parse tree produced by the {@code letExpression}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func exitLetExpression(_ ctx: LangParser.LetExpressionContext)
-	/**
-	 * Enter a parse tree produced by the {@code integerLiteral}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func enterIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext)
-	/**
-	 * Exit a parse tree produced by the {@code integerLiteral}
-	 * labeled alternative in {@link LangParser#expr}.
-	 - Parameters:
-	   - ctx: the parse tree
-	 */
-	func exitIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext)
 	/**
 	 * Enter a parse tree produced by the {@code assignmentExpression}
 	 * labeled alternative in {@link LangParser#expr}.
@@ -287,19 +217,19 @@ public protocol LangListener: ParseTreeListener {
 	 */
 	func exitFuncAppExpression(_ ctx: LangParser.FuncAppExpressionContext)
 	/**
-	 * Enter a parse tree produced by the {@code booleanLiteral}
+	 * Enter a parse tree produced by the {@code memberExpression}
 	 * labeled alternative in {@link LangParser#expr}.
 	 - Parameters:
 	   - ctx: the parse tree
 	 */
-	func enterBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext)
+	func enterMemberExpression(_ ctx: LangParser.MemberExpressionContext)
 	/**
-	 * Exit a parse tree produced by the {@code booleanLiteral}
+	 * Exit a parse tree produced by the {@code memberExpression}
 	 * labeled alternative in {@link LangParser#expr}.
 	 - Parameters:
 	   - ctx: the parse tree
 	 */
-	func exitBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext)
+	func exitMemberExpression(_ ctx: LangParser.MemberExpressionContext)
 	/**
 	 * Enter a parse tree produced by the {@code variableExpression}
 	 * labeled alternative in {@link LangParser#expr}.
@@ -328,6 +258,90 @@ public protocol LangListener: ParseTreeListener {
 	   - ctx: the parse tree
 	 */
 	func exitFuncDefExpression(_ ctx: LangParser.FuncDefExpressionContext)
+	/**
+	 * Enter a parse tree produced by the {@code binaryExpression}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterBinaryExpression(_ ctx: LangParser.BinaryExpressionContext)
+	/**
+	 * Exit a parse tree produced by the {@code binaryExpression}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitBinaryExpression(_ ctx: LangParser.BinaryExpressionContext)
+	/**
+	 * Enter a parse tree produced by the {@code expressionList}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterExpressionList(_ ctx: LangParser.ExpressionListContext)
+	/**
+	 * Exit a parse tree produced by the {@code expressionList}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitExpressionList(_ ctx: LangParser.ExpressionListContext)
+	/**
+	 * Enter a parse tree produced by the {@code stringLiteral}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterStringLiteral(_ ctx: LangParser.StringLiteralContext)
+	/**
+	 * Exit a parse tree produced by the {@code stringLiteral}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitStringLiteral(_ ctx: LangParser.StringLiteralContext)
+	/**
+	 * Enter a parse tree produced by the {@code letExpression}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterLetExpression(_ ctx: LangParser.LetExpressionContext)
+	/**
+	 * Exit a parse tree produced by the {@code letExpression}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitLetExpression(_ ctx: LangParser.LetExpressionContext)
+	/**
+	 * Enter a parse tree produced by the {@code integerLiteral}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext)
+	/**
+	 * Exit a parse tree produced by the {@code integerLiteral}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitIntegerLiteral(_ ctx: LangParser.IntegerLiteralContext)
+	/**
+	 * Enter a parse tree produced by the {@code booleanLiteral}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func enterBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext)
+	/**
+	 * Exit a parse tree produced by the {@code booleanLiteral}
+	 * labeled alternative in {@link LangParser#expr}.
+	 - Parameters:
+	   - ctx: the parse tree
+	 */
+	func exitBooleanLiteral(_ ctx: LangParser.BooleanLiteralContext)
 	/**
 	 * Enter a parse tree produced by {@link LangParser#exprList}.
 	 - Parameters:
