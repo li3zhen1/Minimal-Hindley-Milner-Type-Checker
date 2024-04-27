@@ -2,10 +2,10 @@ protocol Typable {
   var freeVariables: Set<TypeVariable> { get }
 }
 
-enum TypeCheckError: Error {
+enum TypeCheckError: Error, Equatable {
   case typeMismatch
   case infiniteType
-  case unboundVariable
+  case unboundVariable(String)
   case undefinedType
   case insufficientContext
 }

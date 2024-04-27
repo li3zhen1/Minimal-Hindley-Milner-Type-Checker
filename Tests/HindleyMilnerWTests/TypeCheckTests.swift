@@ -40,8 +40,14 @@ class TypeCheckTests: XCTestCase {
     }
 
     do {
-      let ty = try typeCheck("(func a:Int b:Bool => (odd a) || b)")
+      let ty = try typeCheck("(func a:Int b => (odd a) || b)")
       XCTAssertEqual(ty, [intTy, boolTy] => boolTy)
+    }
+
+    do {
+      XCTAssertThrowsError(try typeCheck("(func a:Int b => (old a) || b)")) {
+        assert(($0 as! TypeCheckError) == TypeCheckError.unboundVariable("old"))
+      }
     }
 
     do {
@@ -73,6 +79,11 @@ class TypeCheckTests: XCTestCase {
       XCTAssertEqual(ty, buildTupleTy(boolTy, intTy))
     }
 
+    do {
+      let ty = try typeCheck("(false, 1, func a: Int => a)")
+      XCTAssertEqual(ty, buildTupleTy(boolTy, intTy, intTy => intTy))
+    }
+    
     do {
       let ty = try typeCheck("let a = 23, b = false in { ((func x => (odd a)) 2, 1) }")
       XCTAssertEqual(ty, buildTupleTy(boolTy, intTy))

@@ -57,7 +57,7 @@ struct VariableExpression: ExpressionProtocol {
 
   func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
     guard let type = context.typeEnv[name] else {
-      throw TypeCheckError.unboundVariable
+      throw TypeCheckError.unboundVariable(name)
     }
     return (type.instantiate(), .empty)
   }
