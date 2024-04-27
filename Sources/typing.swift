@@ -50,10 +50,14 @@ precedencegroup RightAssociativePrecedence {
   associativity: right
 }
 
-infix operator =>: RightAssociativePrecedence
+infix operator => : RightAssociativePrecedence
 
 func => (arg: MonoType, ret: MonoType) -> MonoType {
   return .functionApplication(.arrow, parameters: [arg, ret])
+}
+
+func => (arg: [MonoType], ret: MonoType) -> MonoType {
+  return .functionApplication(.arrow, parameters: arg + [ret])
 }
 
 struct TypeFunctionApplication: Equatable {
@@ -150,7 +154,7 @@ extension Substitution {
     }
     return Context(typeEnv: newTypeEnv)
   }
-  
+
   /// The result of the combination is equivalent to applying `other` first, then `self`
   consuming func combine(with other: consuming Substitution) -> Substitution {
     var result = copy self
@@ -241,7 +245,6 @@ extension Context: Typable {
     return t
   }
 }
-
 
 extension MonoType {
   func contains(_ variable: TypeVariable) -> Bool {

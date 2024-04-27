@@ -57,7 +57,7 @@ extension TypeFunctionApplication: CustomDebugStringConvertible {
     case .bool, .int, .string:
       return C.debugDescription
     case .arrow:
-      return parameters.map { $0.debugDescription }.joined(separator: " -> ")
+      return parameters.map { "(" + $0.debugDescription + ")" }.joined(separator: " -> ")
     case .tuple(_):
       let typeList = parameters.map { $0.debugDescription }.joined(separator: ", ")
       return "Tuple(\(typeList))"

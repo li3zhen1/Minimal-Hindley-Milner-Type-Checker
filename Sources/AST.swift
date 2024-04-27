@@ -85,19 +85,36 @@ struct ApplicationExpression: ExpressionProtocol {
 }
 
 struct AbstractionExpression: ExpressionProtocol {
-  let parameter: String
-  let typeHint: TypeExpression?
+  // let parameter: String
+  // let typeHint: TypeExpression?
+
+  let parameters: [ParamWithHole]
   let body: ExpressionProtocol
 
+  struct ParamWithHole {
+    let name: String
+    let hint: TypeExpression?
+  }
+
   func typeCheck(in context: Context) throws -> (MonoType, Substitution) {
-    let paramType = try typeHint?.getType() ?? MonoType.variable()
-    let newContext = context.merge(with: [parameter: .mono(paramType)])
+    // let paramType = try typeHint?.getType() ?? MonoType.variable()
+    // let newContext = context.merge(with: [parameter: .mono(paramType)])
+
+    let paramsWithHoles = try parameters.map { param -> (name: String, hint: MonoType) in
+      let type: MonoType = try param.hint?.getType() ?? MonoType.variable()
+      return (name: param.name, hint: type)
+    }
+
+    let newContext = context.merge(with: .init(paramsWithHoles.map { ($0, .mono($1)) }) { $1 })
 
     let (bodyType, bodySubstitution) = try body.typeCheck(in: newContext)
 
     return (
       .functionApplication(
-        .arrow, parameters: [bodySubstitution.apply(to: paramType), bodyType]),
+        .arrow,
+        parameters: paramsWithHoles.map { paramWithHoles in
+          bodySubstitution.apply(to: paramWithHoles.hint)
+        } + [bodyType]),
       bodySubstitution
     )
   }
@@ -180,9 +197,9 @@ struct ConditionExpression: ExpressionProtocol {
     substitution = elseSubstitution.combine(with: substitution)
 
     let unifySubstitution = try substitution.apply(to: thenType)
-                                  .unify(with: substitution.apply(to: elseType))
+      .unify(with: substitution.apply(to: elseType))
     substitution = unifySubstitution.combine(with: substitution)
-    
+
     return (
       unifySubstitution.apply(to: thenType),
       substitution
@@ -214,7 +231,6 @@ struct MemberExpression: ExpressionProtocol {
   }
 }
 
-
 struct SumTypeExpression: TypeExpression {
   let lhs: TypeExpression
   let rhs: TypeExpression
@@ -228,7 +244,8 @@ struct ProductTypeExpression: TypeExpression {
   let members: [TypeExpression]
 
   func getType() throws -> MonoType {
-    return .functionApplication(.tuple(members.count),
+    return .functionApplication(
+      .tuple(members.count),
       parameters: try members.map { try $0.getType() })
   }
 }
@@ -251,5 +268,5 @@ struct NamedTypeExpression: TypeExpression {
     }
     return type
   }
-  
+
 }

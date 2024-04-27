@@ -32,6 +32,24 @@ class TypeCheckTests: XCTestCase {
     }
   }
 
+  func testMutipleParamAbstraction() throws {
+
+    do {
+      let ty = try typeCheck("(func a b => a+b)")
+      XCTAssertEqual(ty, [intTy, intTy] => intTy)
+    }
+
+    do {
+      let ty = try typeCheck("(func a:Int b:Bool => (odd a) || b)")
+      XCTAssertEqual(ty, [intTy, boolTy] => boolTy)
+    }
+
+    do {
+      let ty = try typeCheck("(func a:Int b => a+b)")
+      XCTAssertEqual(ty, [intTy, intTy] => intTy)
+    }
+  }
+
   func testLetExpression() throws {
     do {
       let ty = try typeCheck("let a = 3, b = odd(a) in { not(b) }")
@@ -80,12 +98,13 @@ class TypeCheckTests: XCTestCase {
     }
 
     do {
-      let ty = try typeCheck("""
-      func a =>
-        let b = a in {
-          (b, if (let c = b in { not (odd c) }) then odd a else true)
-        }
-      """)
+      let ty = try typeCheck(
+        """
+        func a =>
+          let b = a in {
+            (b, if (let c = b in { not (odd c) }) then odd a else true)
+          }
+        """)
       XCTAssertEqual(ty, intTy => buildTupleTy(intTy, boolTy))
     }
   }
